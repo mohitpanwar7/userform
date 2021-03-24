@@ -27,51 +27,46 @@ def get():
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-
     queryforid = "select id from personaldetails;"
     cursor.execute(queryforid)
-    rowsid = cursor.fetchall()    
+    rowsid = cursor.fetchall()
     id_index = []
-    idquerydata =[]
-    
+    idquerydata = []
+
     for item in rowsid:
         id_index.append(item[0])
 
-    exitres =[]
+    exitres = []
     for id in id_index:
         idquery = f"select * from personaldetails where id={id}"
         cursor.execute(idquery)
         querydata = cursor.fetchall()
         userdata = []
-        
+
         for index, item in enumerate(querydata):
             usercolumnValue = {}
-            j=0
+            j = 0
             for i in colnames:
                 usercolumnValue[i] = item[j]
                 j += 1
-            
+
         userdata.append(usercolumnValue)
 
         addressquery = f"select * from useraddress where userid={id}"
         cursor.execute(addressquery)
-        addressdata =cursor.fetchall()
+        addressdata = cursor.fetchall()
         addresscolnames = [desc[0] for desc in cursor.description]
-        addresslist =[]
+        addresslist = []
         for address in addressdata:
             columnValue = {}
             for index, item in enumerate(address):
                 columnValue[addresscolnames[index]] = item
             addresslist.append(columnValue)
-        usercolumnValue["addresslist"] =  addresslist
+        usercolumnValue["addresslist"] = addresslist
 
         # userdata.append({"addresslist":addresslist})
         idquerydata.append(usercolumnValue)
 
-        
-
-
-    
     connection.close()
 
     return jsonify(idquerydata)
@@ -135,7 +130,6 @@ def post():
     connection.commit()
     count = cursor.rowcount
     print(count, "Record inserted successfully into table")
-    
 
     connection.close()
     result = get()
@@ -165,7 +159,7 @@ def delete_user_by_id(id):
         print(f"Record with {id} Deleted Successfully from table")
         connection.close()
         result = get()
-    else :
+    else:
         print(f"User with id: {id} Not Found")
         result = jsonify(f"User with id: {id} Not Found")
     # queryforidreset = "ALTER TABLE personaldetails DROP id;ALTER TABLE personaldetails ADD id int PRIMARY KEY;"
@@ -175,7 +169,121 @@ def delete_user_by_id(id):
     # cursor.execute(query2)
     # record = cursor.fetchall()
     # count = cursor.rowcount
-    
+
     return result
+
+@app.route('/state')
+def get_all_state_name_and_id():
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query1 = "select * from state;"
+    cursor.execute(query1)
+    rows = cursor.fetchall()
+    statecolnames = [desc[0] for desc in cursor.description]
+    result = []
+    for item1 in rows:
+        columnValue = {}
+        for index, item in enumerate(item1):
+            columnValue[statecolnames[index]] = item
+        result.append(columnValue)
+    connection.close()
+    
+    if (rows != []):
+        return jsonify(result)
+    else:
+        return jsonify("States Not Found in Database")
+
+@app.route('/state/<int:id>')
+def get_state_name_by_id(id):
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query1 = f"select * from state where id = {id};"
+    cursor.execute(query1)
+    rows = cursor.fetchall()
+    statecolnames = [desc[0] for desc in cursor.description]
+    result = []
+    for item1 in rows:
+        columnValue = {}
+        for index, item in enumerate(item1):
+            columnValue[statecolnames[index]] = item
+        result.append(columnValue)
+    connection.close()
+    
+    if (rows != []):
+        result = result[0]
+        return jsonify(result)
+    else:
+        return jsonify(f"State with id: '{id}' Not Found in Database")
+
+@app.route('/state/<string:name>')
+def get_state_id_by_name(name):
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    cname = name.capitalize()
+    query1 = f"select * from state where statename = '{cname}';"
+    cursor.execute(query1)
+    rows = cursor.fetchall()
+    statecolnames = [desc[0] for desc in cursor.description]
+    result = []
+    for item1 in rows:
+        columnValue = {}
+        for index, item in enumerate(item1):
+            columnValue[statecolnames[index]] = item
+        result.append(columnValue)
+    connection.close()
+    
+    if (rows != []):
+        result = result[0]
+        return jsonify(result)
+    else:
+        return jsonify(f"State {cname} Not Found in Database")
+
+
+@app.route('/country/<int:id>')
+def get_state_by_country_id(id):
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query1 = f"select * from state where countryid = '{id}';"
+    cursor.execute(query1)
+    rows = cursor.fetchall()
+    statecolnames = [desc[0] for desc in cursor.description]
+    result = []
+    for item1 in rows:
+        columnValue = {}
+        for index, item in enumerate(item1):
+            columnValue[statecolnames[index]] = item
+        result.append(columnValue)
+    connection.close()
+    
+    if (rows != []):
+        # result = result[0]
+        return jsonify(result)
+    else:
+        return jsonify(f"States with country id: '{id}' Not Found in Database")
+
 
 app.run(debug=True)
