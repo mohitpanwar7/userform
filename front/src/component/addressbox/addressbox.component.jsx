@@ -16,7 +16,8 @@ class AddressBox extends React.Component {
 
 
   countryOptionHandler = (event) => {
-    this.setState({ country: event.target.value });
+    const item = this.props.item;
+    this.setState({ country: event.target.value }, () => { this.handleChildState(this.state,item) });
 
   };
 

@@ -270,13 +270,16 @@ def get_state_by_country_id(id):
     query1 = f"select * from state where countryid = '{id}';"
     cursor.execute(query1)
     rows = cursor.fetchall()
-    statecolnames = [desc[0] for desc in cursor.description]
+    # statecolnames = [desc[0] for desc in cursor.description]
     result = []
-    for item1 in rows:
-        columnValue = {}
-        for index, item in enumerate(item1):
-            columnValue[statecolnames[index]] = item
-        result.append(columnValue)
+    for item in rows:
+        result.append(item[3:-4:-2])
+
+    # for item1 in rows:
+    #     columnValue = {}
+    #     for index, item in enumerate(item1):
+    #         columnValue[statecolnames[index]] = item
+    #     result.append(columnValue)
     connection.close()
     
     if (rows != []):

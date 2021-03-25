@@ -6,53 +6,88 @@ import './selectstate.styles.css';
 class CountryStateSelection extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            states: [],
+            options: null
+        }
     };
 
+    // componentDidMount() {
+    //     fetch(`http://localhost:5000/country/1`)
+    //         .then((response) => response.json())
+    //         .then(data => {
+    //             this.setState({ states: data });
+    //         });
+    // }
+    
+    statefetch = (countryid) => {
+        fetch(`http://localhost:5000/country/${countryid}`)
+            .then((response) => response.json())
+            .then(data => {
+                this.setState({ states: data });
+            });
 
-    render() {
+
+
+    }
+    //         try {
+    //             const response = await fetch(`http://localhost:5000/country/${countryid}`, {
+    //                 method: 'GET',
+
+    //             });
+    //             this.statelist = await response.json();
+    //             return statelist
+
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
+
+    
+
+    statedown = async (props) => {
+        this.props.countryOptionHandler(props)
+
         const { country, state } = this.props.statedata;
-        let India = ["Delhi", "Uttar Pradesh", "Maharastra",
-            "Madhya Pradesh", "Rajasthan", "Haryana", "Kerela",
-            "Assam", "Sikkim", "Arunachal Pradesh", "Andhra Pradesh",
-            "Telengana", "Bihar", "Gujrat", "West bengal", "Goa",
-            "Punjab", "Jammu & Kashmir", "Himachal Pradesh",
-            "Uttarkhand", "Ladakh", "Jharkhand", "Chhatisgarh"
-        ];
-        let Usa = [
-            "Californea",
-            "Utah",
-            "Las Vegas",
-            "Washington Dc"
-        ];
-
-        let Russia = ["Adygey", "Altai", "Bashkortostan",
-            "Buryat", "Chechnya", "Chuvash", "Dagestan",
-            "Ingushetia", "Kabardino-Balkar", "Kalmykia",
-            "Karachay-Cherkess"];
-
-        let type = null;
 
         let options = null;
 
         if (country === "India") {
-            type = India;
+            // type = India;
+
+            this.statefetch(1);
+            console.log("this.state",this.state.states)
+            
+            
+
         } else if (country === "Usa") {
-            type = Usa;
-        } else if (country === "Russia") {
-            type = Russia;
+            this.statefetch(2);
+
         } else if (country === "Other Country") {
 
         }
 
-        if (type) {
-            options = type.map((el) => <option key={el}>{el}</option>);
+        if (country) {
+            console.log("done")
+            options = await this.state.states.map((key) => <option key={key}>{key}</option>);
+            
+            this.setState({ options: options })
+            console.log("options state", options)
         }
+    }
+
+
+
+    render() {
+
+
+
+
 
         return (
             <div className="state-div row mx-0" >
                 <Form.Group className="col-md-6">
                     <Form.Label>Country</Form.Label>
-                    <Form.Control as="select" onChange={this.props.countryOptionHandler} required>
+                    <Form.Control as="select" onChange={this.statedown} required>
                         <option value=''>---Select Country---</option>
                         <option>India</option>
                         <option>Usa</option>
@@ -64,7 +99,7 @@ class CountryStateSelection extends React.Component {
                     <Form.Label>State</Form.Label>
                     <Form.Control as="select" onChange={this.props.stateOptionHandler} required>
                         <option value="">---Select State---</option>
-                        {options}
+                        {this.state.options}
                     </Form.Control>
                 </Form.Group>
             </div>
