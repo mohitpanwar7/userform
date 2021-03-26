@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.1.10",
     "axios": "^0.21.1",
     "bootstrap": "^4.6.0",
+    "chokidar": "^3.5.1",
     "create-react-app": "^4.0.3",
     "jquery": "^3.6.0",
     "react": "^17.0.1",

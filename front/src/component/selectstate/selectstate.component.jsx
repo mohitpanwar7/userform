@@ -43,76 +43,80 @@ class CountryStateSelection extends React.Component {
             this.statefetch(2);
         }
     }
-        //         try {
-        //             const response = await fetch(`http://localhost:5000/country/${countryid}`, {
-        //                 method: 'GET',
+    //         try {
+    //             const response = await fetch(`http://localhost:5000/country/${countryid}`, {
+    //                 method: 'GET',
 
-        //             });
-        //             this.statelist = await response.json();
-        //             return statelist
+    //             });
+    //             this.statelist = await response.json();
+    //             return statelist
 
-        //         } catch (error) {
-        //             console.error(error);
-        //         }
-
-
-
-        // statedown = async (props) => {
-        //     
-
-        //     const { country, state } = this.props.statedata;
-
-        //     let options = null;
-
-        //     if (country === "India") {
-        //         // type = India;
-
-        //         this.statefetch(1);
-        //         console.log("this.state",this.state.states)
+    //         } catch (error) {
+    //             console.error(error);
+    //         }
 
 
 
-        //     } else if (country === "Usa") {
-        //         this.statefetch(2);
+    // statedown = async (props) => {
+    //     
 
-        //     } else if (country === "Other Country") {
+    //     const { country, state } = this.props.statedata;
 
-        //     }
+    //     let options = null;
 
-        //     if (country) {
-        //         console.log("done")
-        //         options = await this.state.states.map((key) => <option key={key}>{key}</option>);
+    //     if (country === "India") {
+    //         // type = India;
 
-        //         this.setState({ options: options })
-        //         console.log("options state", options)
-        //     }
-        // }
+    //         this.statefetch(1);
+    //         console.log("this.state",this.state.states)
 
 
 
-        render() {
-            return (
-                <div className="state-div row mx-0" >
-                    <Form.Group className="col-md-6">
-                        <Form.Label>Country</Form.Label>
-                        <Form.Control as="select" onChange={(e) => this.statedown(e.target.value)} required>
-                            <option value=''>---Select Country---</option>
-                            <option value="India">India</option>
-                            <option value="Usa">Usa</option>
-                        </Form.Control>
-                    </Form.Group>
-                    <Form.Group className="col-md-6">
-                        <Form.Label>State</Form.Label>
-                        <Form.Control as="select" onChange={this.props.stateOptionHandler} required>
-                            <option value="">---Select State---</option>
-                            {this.state.states.map(state => (
-                                <option key={state.id} value={[[state.statename],[state.id]]}>{state.statename}</option>
-                            ))} 
-                        </Form.Control>
-                    </Form.Group>
-                </div>
-            )
-        }
-    };
+    //     } else if (country === "Usa") {
+    //         this.statefetch(2);
 
-    export default CountryStateSelection;
+    //     } else if (country === "Other Country") {
+
+    //     }
+
+    //     if (country) {
+    //         console.log("done")
+    //         options = await this.state.states.map((key) => <option key={key}>{key}</option>);
+
+    //         this.setState({ options: options })
+    //         console.log("options state", options)
+    //     }
+    // }
+
+
+
+    render() {
+        return (
+            
+
+
+                    <div className="state-div row mx-0"  >
+                        <Form.Group className="col-md-6">
+                            <Form.Label>Country</Form.Label>
+                            <Form.Control as="select" onChange={(e) => this.statedown(e.target.value)} required>
+                                <option value=''>---Select Country---</option>
+                                <option value="India">India</option>
+                                <option value="Usa">Usa</option>
+                            </Form.Control>
+                        </Form.Group>
+                        <Form.Group className="col-md-6">
+                            <Form.Label>State</Form.Label>
+                            <Form.Control as="select" onChange={this.props.stateOptionHandler} required>
+                                <option value="">---Select State---</option>
+                                {this.state.states.map(state => (
+                                    <option key={state.id} value={[[state.statename], [state.id]]}>{state.statename}</option>
+                                ))}
+                            </Form.Control>
+                        </Form.Group>
+                    </div>
+             
+        )
+    }
+};
+
+export default CountryStateSelection;

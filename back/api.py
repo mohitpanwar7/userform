@@ -36,7 +36,7 @@ def get_all_users_with_address():
     for item in rowsid:
         id_index.append(item[0])
 
-    exitres = []
+
     for id in id_index:
         idquery = f"select * from personaldetails where id={id}"
         cursor.execute(idquery)
@@ -72,6 +72,47 @@ def get_all_users_with_address():
     return jsonify(idquerydata)
 
 @app.route('/users/<int:id>')
+def get_user_json_by_id(id):
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query1 = f"select * from personaldetails where id={id};"
+    cursor.execute(query1)
+    rows = cursor.fetchall()
+    colnames = [desc[0] for desc in cursor.description]
+    result = []
+    for item1 in rows:
+        columnValue = {}
+        for index, item in enumerate(item1):
+            columnValue[colnames[index]] = item
+        result.append(columnValue)
+
+
+    addressquery = f"select * from useraddress where userid={id}"
+    cursor.execute(addressquery)
+    addressdata = cursor.fetchall()
+    addresscolnames = [desc[0] for desc in cursor.description]
+    addresslist = []
+    columnValue = {}
+    for address in addressdata:
+        addresscolumnValue = {}
+        for index, item in enumerate(address):
+            addresscolumnValue[addresscolnames[index]] = item
+        addresslist.append(addresscolumnValue)
+    columnValue["addresslist"] = addresslist
+    if result != []:
+        result = result[0]
+        result["addresslist"] =addresslist
+        return jsonify(result)
+    else:
+        result = ["Not Found"]        
+    connection.close()
+
 def get_user_by_id(id):
     connection = psycopg2.connect(
         host="127.0.0.1",
@@ -113,7 +154,6 @@ def get_user_by_id(id):
         result = ["Not Found"]        
     connection.close()
 
-    
 
 
 @app.route('/users/create', methods=['POST'])

@@ -24,7 +24,7 @@ class AddressBox extends React.Component {
 
   stateOptionHandler = (event) => {
     const statedata = event.target.value.split(",")
-    console.log("key==>",statedata[0])
+    console.log("key==>",statedata[1])
     const item = this.props.item;
     this.setState({ state: statedata[0] }, () => { this.handleChildState(this.state, item) });
     this.setState({ stateid: statedata[1] }, () => { this.handleChildState(this.state, item) });

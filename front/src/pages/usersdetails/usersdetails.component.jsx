@@ -9,8 +9,8 @@ import paginationFactory from 'react-bootstrap-table2-paginator';
 // import { Button } from 'react-bootstrap';
 import './userdetails.styles.css';
 // import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
-import DeleteButton from "../../component/userdeletebutton/userdeletebutton.component"
-
+import DeleteButton from "../../component/userdeletebutton/userdeletebutton.component";
+import AddressData from "../../component/useraddresscolumn/useraddresscolumn.component";
 
 // function StateUsers() {function StateUsers() {
 //   let location = useLocation();
@@ -74,7 +74,7 @@ class UserTable extends React.Component {
         sort: true,
         formatter : (value) => (
           <div>
-            {value}
+            <AddressData value={value}/>
           </div>
         )
       },
@@ -93,7 +93,6 @@ class UserTable extends React.Component {
   }
   stateid = this.props.location.stateid; 
   componentDidMount(props) {
-    console.log("mountain called")
     fetch(`http://localhost:5000/users/state/${this.stateid}`)
       .then((response) => response.json())
       .then(data => {
