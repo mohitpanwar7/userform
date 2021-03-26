@@ -1,4 +1,5 @@
 import React from 'react';
+import {Link} from 'react-router-dom';
 import { Form, Button, Modal } from 'react-bootstrap';
 import './personaldetails.styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -38,6 +39,7 @@ const addressArray = {
     city: '',
     country: '',
     state: '',
+    stateid: '',
     zipcode: '',
     formErrors: {
         address: '',
@@ -61,7 +63,7 @@ class PersonalDetailsFormComponents extends React.Component {
             gender: '',
             maritalstatus: '',
             termsandconditions: false,
-            show:false,
+            show: false,
             formErrors: {
                 firstname: '',
                 lastname: '',
@@ -79,6 +81,7 @@ class PersonalDetailsFormComponents extends React.Component {
                 city: '',
                 country: '',
                 state: '',
+                stateid: '',
                 zipcode: '',
                 formErrors: {
                     address: '',
@@ -108,7 +111,7 @@ class PersonalDetailsFormComponents extends React.Component {
             }).then(r => r.json())
                 .then(res => {
                     if (res) {
-                        this.setState({ show : true })
+                        this.setState({ show: true })
                         console.log("response==>", res)
                     }
                 })
@@ -229,7 +232,7 @@ class PersonalDetailsFormComponents extends React.Component {
     render() {
         const { formErrors } = this.state;
         const statedata = this.state;
-        const handleClose = () => this.setState({ show : false});
+        const handleClose = () => this.setState({ show: false });
 
         return (
             <div>
@@ -306,7 +309,11 @@ class PersonalDetailsFormComponents extends React.Component {
                             <Form.Label htmlFor="termsandconditions" inline="true" name="termsandconditions">Agree to terms & conditions</Form.Label>
                         </Form.Group>
                         <div className="button-div">
-                            <Button className="submit-button" type="submit">Submit</Button>
+                            <Button className="submit-button" type="submit">Submit Form</Button>
+
+                            <Link to="/search">
+                                <Button className="submit-button" variant="info" style={{ marginLeft: "15px" }}>Search Users By State</Button>
+                            </Link>
                         </div>
                     </div>
                 </Form>
@@ -321,7 +328,7 @@ class PersonalDetailsFormComponents extends React.Component {
                         </Button>
                     </Modal.Footer>
                 </Modal>
-                
+
             </div>
         );
     }

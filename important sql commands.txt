@@ -1,10 +1,10 @@
 create personaldetails table command in postgresql ===>
 
-create table personaldetails(id serial NOT NULL PRIMARY KEY, firstname varchar (100) NOT NULL,lastname varchar (100) NOT NULL, mobilenumber varchar(13), email varchar (100) NOT NULL);
+create table personaldetails(id serial NOT NULL PRIMARY KEY, firstname varchar (100) NOT NULL,lastname varchar (100) NOT NULL, mobilenumber varchar(13) NOT NULL, email varchar (100) NOT NULL, gender varchar(10) not null, dob date not null,maritalstatus varchar(10) not null);
 
 
 create user table command ===>
-create table useraddress(userid integer,address varchar(150),city varchar(40),country varchar(20),state varchar(30), zipcode integer);
+create table useraddress(userid integer not null,id integer serial primary key not null,address varchar(150) not null,city varchar(40) not null,country varchar(20) not null,state varchar(30) not null,stateid integer not null, zipcode integer not null);
 
 
 join command ===>

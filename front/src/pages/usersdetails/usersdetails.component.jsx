@@ -1,4 +1,5 @@
 import React from 'react';
+// import { useLocation } from "react-router-dom";
 // import { Table } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 // import { TableHeaderColumn } from 'react-bootstrap-table-next';
@@ -10,104 +11,120 @@ import './userdetails.styles.css';
 // import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import DeleteButton from "../../component/userdeletebutton/userdeletebutton.component"
 
+
+// function StateUsers() {function StateUsers() {
+//   let location = useLocation();
+//   console.log(location);
+//   return location.state
+// }
+//   let location = useLocation();
+//   console.log(location);
+//   return location.state
+// }
+
 class UserTable extends React.Component {
+  constructor(props) {
+    super(props);
 
-  state = {
+    this.state = {
+      selectedstateid: "",
+      users: [],
 
-    users: [],
+      columns: [{
+        dataField: 'id',
+        text: 'Id',
+        filter: textFilter()
+      },
+      {
+        dataField: 'firstname',
+        text: 'First Name',
+        sort: true,
+        filter: textFilter()
 
-    columns: [{
-      dataField: 'id',
-      text: 'Id',
-      filter: textFilter()
-    },
-    {
-      dataField: 'firstname',
-      text: 'First Name',
-      sort: true,
-      filter: textFilter()
+      },
+      {
+        dataField: 'lastname',
+        text: 'Last Name',
+        sort: true,
+        filter: textFilter()
+      },
+      {
+        dataField: 'dob',
+        text: 'Date of Birth',
+        sort: true
+      },
+      {
+        dataField: 'mobilenumber',
+        text: 'Mobile Number',
+        sort: true
+      },
+      {
+        dataField: 'gender',
+        text: 'Gender',
+        sort: true
+      },
+      {
+        dataField: 'email',
+        text: 'Email Id',
+        sort: true
+      },
+      {
+        dataField: 'id',
+        text: 'Address',
+        sort: true,
+        formatter : (value) => (
+          <div>
+            {value}
+          </div>
+        )
+      },
+      {
+        dataField: 'id',
+        text: 'Action',
+        formatter: (value, row, column, rowIndex, columnIndex, id, label, className, ...editorProps) => (
+          <div>
+            <DeleteButton stateid={this.state.selectedstateid} handleChildState={this.handleChildState} value={value} className="btn btn-sm" label="Delete" />
+          </div>
+        )
 
-    },
-    {
-      dataField: 'lastname',
-      text: 'Last Name',
-      sort: true,
-      filter: textFilter()
-    },
-    {
-      dataField: 'dob',
-      text: 'Date of Birth',
-      sort: true
-    },
-    {
-      dataField: 'mobilenumber',
-      text: 'Mobile Number',
-      sort: true
-    },
-    {
-      dataField: 'gender',
-      text: 'Gender',
-      sort: true
-    },
-    {
-      dataField: 'email',
-      text: 'Email Id',
-      sort: true
-    },
-    {
-      dataField: 'addresslistg',
-      text: 'Address',
-      sort: true
-    },
-    {
-      dataField: 'id',
-      text: 'Action',
-      formatter: (value, row, column, rowIndex, columnIndex, id, label, className, ...editorProps) => (
-        <div>
-          <DeleteButton handleChildState={this.handleChildState} value={value} className="btn btn-sm" label="Delete" />
-        </div>
-      )
-
-    },
-    ]
+      },
+      ]
+    }
   }
-
-  componentDidMount() {
-
-    axios.get('http://localhost:5000/users').then(response => {
-
-      console.log(response.data);
-      this.setState({
-        users: response.data
+  stateid = this.props.location.stateid; 
+  componentDidMount(props) {
+    console.log("mountain called")
+    fetch(`http://localhost:5000/users/state/${this.stateid}`)
+      .then((response) => response.json())
+      .then(data => {
+        this.setState({ users: data });
       });
-    });
-    console.log(this.state);
+    
+    this.setState({ selectedstateid: this.stateid })
+    console.log("users in userdetails table", this.stateid);
   }
-
+  
   
 
-  // handleDelete = () => {
-  //   this.setState({ users: [] });
-  //   console.log("user deleted")
 
-  // }
-  handleChildState = () => {
-    console.log("button pressed")
-    this.componentDidMount();
+  handleChildState = async (stateid) => {
+    console.log("child state",stateid)
+    let response = await fetch(`http://localhost:5000/users/state/${stateid}`);
+    let data = await response.json();
+    
+    console.log("response ==>",data)
+    this.setState({ users : data })
   }
 
   render() {
 
-
-    
-
-
     return (
+
       <div className="container">
         <div className="row" className="hdr" style={{ marginTop: 80 }}>
           <div className="col-sm-12 btn btn-info">
             Users Data Table
-          </div>
+                </div>
         </div>
         <div style={{ marginTop: 20 }}>
           <BootstrapTable
@@ -123,5 +140,7 @@ class UserTable extends React.Component {
     )
   }
 }
+
+
 
 export default UserTable;

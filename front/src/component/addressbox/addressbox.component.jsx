@@ -15,28 +15,31 @@ class AddressBox extends React.Component {
   }
 
 
-  countryOptionHandler = (event) => {
+  countryOptionHandler = (value) => {
     const item = this.props.item;
-    this.setState({ country: event.target.value }, () => { this.handleChildState(this.state,item) });
+    this.setState({ country: value }, () => { this.handleChildState(this.state, item) });
+    this.setState({ state: '' });
 
   };
 
   stateOptionHandler = (event) => {
+    const statedata = event.target.value.split(",")
+    console.log("key==>",statedata[0])
     const item = this.props.item;
-    this.setState({ state: event.target.value }, () => { this.handleChildState(this.state,item) });
-
+    this.setState({ state: statedata[0] }, () => { this.handleChildState(this.state, item) });
+    this.setState({ stateid: statedata[1] }, () => { this.handleChildState(this.state, item) });
   };
 
-  
+
   handleAddressChange = (e) => {
-    
+
     e.preventDefault();
     const { name, value } = e.target;
     const item = this.props.item;
-    this.setState({ id : item });
-    this.setState({ [name]: value }, () => { this.handleChildState(this.state,item) });
+    this.setState({ id: item });
+    this.setState({ [name]: value }, () => { this.handleChildState(this.state, item) });
     let formErrors = this.props.statedata.addressBoxList[this.props.item].formErrors;
-    
+
     switch (name) {
       case "address":
         formErrors.address =
@@ -58,8 +61,8 @@ class AddressBox extends React.Component {
   };
 
 
-  handleChildState = (state,item) => {
-    return this.props.handleChildState(state,item);
+  handleChildState = (state, item) => {
+    return this.props.handleChildState(state, item);
   }
 
   render() {
