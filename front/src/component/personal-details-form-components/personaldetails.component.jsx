@@ -1,5 +1,5 @@
 import React from 'react';
-import {Link} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { Form, Button, Modal } from 'react-bootstrap';
 import './personaldetails.styles.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -7,6 +7,8 @@ import AddressBox from '../addressbox/addressbox.component';
 import { FormInput } from '../form-components/form.component';
 // import $ from 'jquery';
 import update from 'react-addons-update';
+import ImageUploader from "react-images-upload";
+
 
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
@@ -55,6 +57,7 @@ class PersonalDetailsFormComponents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            pictures: [],
             firstname: '',
             lastname: '',
             mobilenumber: '',
@@ -94,6 +97,7 @@ class PersonalDetailsFormComponents extends React.Component {
             ],
 
         }
+        this.onDrop = this.onDrop.bind(this);
     };
 
 
@@ -229,6 +233,12 @@ class PersonalDetailsFormComponents extends React.Component {
         }));
     }
 
+    onDrop(pictureFiles, pictureDataURLs) {
+        this.setState({
+            pictures: pictureDataURLs
+        })
+    }
+
     render() {
         const { formErrors } = this.state;
         const statedata = this.state;
@@ -239,6 +249,17 @@ class PersonalDetailsFormComponents extends React.Component {
 
                 <Form onSubmit={this.handleSubmit} >
                     <div className="form-div row">
+                        <div className="col-md-4">
+                            <ImageUploader
+                                withIcon={false}
+                                buttonText="Choose User Image"
+                                onChange={this.onDrop}
+                                imgExtension={[".jpg", ".gif", ".png"]}
+                                maxFileSize={5242880}
+                            />
+                        </div>
+
+
                         <FormInput className="col-md-4" inputClassName={formErrors.firstname.length > 0 ? "error" : ""}
                             label="First Name" name="firstname" type="text" placeholder="Enter First Name"
                             errorMessage={formErrors.firstname.length > 0 && (<span className="errormessage">{formErrors.firstname}</span>)} onChange={this.handleChange} />

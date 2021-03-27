@@ -1,10 +1,39 @@
-from flask import Flask, json, jsonify, request
+import os
+from flask import Flask, json, jsonify, request , send_from_directory
 from flask_restful import Api, Resource
 import psycopg2
+import base64
+
+
 
 app = Flask(__name__)
 api = Api(app)
 
+
+cwd = os.getcwd()
+print(cwd)
+
+UPLOAD_DIRECTORY = f"{cwd}/api_uploaded_files"
+if not os.path.exists(UPLOAD_DIRECTORY):
+    os.makedirs(UPLOAD_DIRECTORY)
+print(UPLOAD_DIRECTORY)
+cwd = os.getcwd()
+print(cwd)
+@app.route("/files")
+def list_files():
+    """Endpoint to list files on the server."""
+    files = []
+    for filename in os.listdir(UPLOAD_DIRECTORY):
+        path = os.path.join(UPLOAD_DIRECTORY, filename)
+        if os.path.isfile(path):
+            files.append(filename)
+    return jsonify(files)
+    
+    
+@app.route("/files/<path:path>")
+def get_file(path):
+    """Download a file."""
+    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
 
 @app.route('/users')
 def get_all_users_with_address():
@@ -21,37 +50,34 @@ def get_all_users_with_address():
     rows = cursor.fetchall()
     colnames = [desc[0] for desc in cursor.description]
     result = []
+    usersid = []
     for item1 in rows:
         columnValue = {}
+        usersid.append(item1[0])
         for index, item in enumerate(item1):
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-    queryforid = "select id from personaldetails;"
-    cursor.execute(queryforid)
-    rowsid = cursor.fetchall()
-    id_index = []
+    
+    # for id in usersid:
+    #     idquery = f"select * from personaldetails where id={id}"
+    #     cursor.execute(idquery)
+    #     querydata = cursor.fetchall()
+        
+        
+    # userdata = []
+    # for index, item in enumerate(rows):
+    #     usercolumnValue = {}
+    #     j = 0
+    #     for i in colnames:
+    #         usercolumnValue[i] = item[j]
+    #         j += 1
+    
+    # userdata.append(usercolumnValue)
+    # print("userdata ===>",userdata)
     idquerydata = []
-
-    for item in rowsid:
-        id_index.append(item[0])
-
-
-    for id in id_index:
-        idquery = f"select * from personaldetails where id={id}"
-        cursor.execute(idquery)
-        querydata = cursor.fetchall()
-        userdata = []
-
-        for index, item in enumerate(querydata):
-            usercolumnValue = {}
-            j = 0
-            for i in colnames:
-                usercolumnValue[i] = item[j]
-                j += 1
-
-        userdata.append(usercolumnValue)
-
+    i=0
+    for id in usersid:
         addressquery = f"select * from useraddress where userid={id}"
         cursor.execute(addressquery)
         addressdata = cursor.fetchall()
@@ -62,14 +88,22 @@ def get_all_users_with_address():
             for index, item in enumerate(address):
                 columnValue[addresscolnames[index]] = item
             addresslist.append(columnValue)
-        usercolumnValue["addresslist"] = addresslist
+        idquerydata.append(addresslist)
+        newr =[]
+    
+    j = 0    
+    for r in result:
+        r["addresslist"] = idquerydata[j]
+        newr.append(r)
+        j +=1
+    
 
         # userdata.append({"addresslist":addresslist})
-        idquerydata.append(usercolumnValue)
+    # idquerydata.append(newr)
 
     connection.close()
 
-    return jsonify(idquerydata)
+    return jsonify(newr)
 
 @app.route('/users/<int:id>')
 def get_user_json_by_id(id):
@@ -167,18 +201,26 @@ def create_user_by_post_request():
         gender = request_data['gender']
         maritalstatus = request_data['maritalstatus']
         dob = request_data['dob']
-
+        image = request_data['pictures']
+        # print("image ===>>>",image('pictures'))
+    print("image==>",image)
+    # image = base64.decodebytes(image)
+    print("image==>",image[0])
     # data = request.form.to_dict(flat=False)
-    print("firstname", firstname)
-    print("lastname", lastname)
-    print("mobilenumber", mobilenumber)
-    print("email", email)
-    print("gender", gender)
-    print("dob", dob)
-    print(request_data)
+    # print("firstname", firstname)
+    # print("lastname", lastname)
+    # print("mobilenumber", mobilenumber)
+    # print("email", email)
+    # print("gender", gender)
+    # print("dob", dob)
+    # print(request_data)
     addressarray = request_data['addressBoxList']
-    print("addressarray ==>", addressarray)
+    # print("addressarray ==>", addressarray)
+    
+    # with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
+    #     fp.write(request.data)
 
+    
     connection = psycopg2.connect(
         host="127.0.0.1",
         port="5432",
@@ -194,6 +236,9 @@ def create_user_by_post_request():
     cursor.execute(query2)
     rows = cursor.fetchall()
     user_id = last_id[0]
+
+    # with open(os.path.join(UPLOAD_DIRECTORY, 'user_id'+'.jpg'), "wb") as fp:
+    #     fp.write(image)
 
     colnames = [desc[0] for desc in cursor.description]
     result = []
@@ -218,7 +263,7 @@ def create_user_by_post_request():
 
     connection.close()
     result = get_all_users_with_address()
-    return result
+    return result,201
 
 
 @app.route('/users/delete/<int:id>')
