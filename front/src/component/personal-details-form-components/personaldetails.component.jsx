@@ -234,8 +234,15 @@ class PersonalDetailsFormComponents extends React.Component {
     }
 
     onDrop(pictureFiles, pictureDataURLs) {
+        let image = "";
+        let reader = new FileReader();
+        reader.readAsDataURL(pictureFiles);
+        reader.onload = function () {
+            image = reader.result;
+        };
+
         this.setState({
-            pictures: pictureDataURLs
+            pictures: image
         })
     }
 

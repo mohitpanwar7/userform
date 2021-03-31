@@ -201,11 +201,12 @@ def create_user_by_post_request():
         gender = request_data['gender']
         maritalstatus = request_data['maritalstatus']
         dob = request_data['dob']
-        image = request_data['pictures']
+        # image = request_data['pictures']
         # print("image ===>>>",image('pictures'))
-    print("image==>",image)
-    # image = base64.decodebytes(image)
-    print("image==>",image[0])
+    
+    # image = image[0]
+    # imaged = base64.b64decode(image)
+    # print("image==>",imaged)
     # data = request.form.to_dict(flat=False)
     # print("firstname", firstname)
     # print("lastname", lastname)
@@ -463,6 +464,80 @@ def get_users_by_state_id(id):
         return jsonify(str_list)
     else:
         return jsonify("Users Not Found")
+
+
+@app.route('/signup', methods=['POST'])
+def create_userlogin_by_post_request():
+    if request.method == 'POST':
+        request_data = request.get_json()
+        displayname = request_data['displayName']
+        email = request_data['email']        
+        password = request_data['password']
+        
+    print("displayname", displayname)
+    print("email", email)
+    print("password", password)
+
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query_user_verify = f"select * from userauth where email = {email}"
+    cursor.execute(query_user_verify)
+    rows = cursor.fetchall()
+    if (rows != []):
+
+        query = f"INSERT INTO userauth(displayname,email,password) VALUES ('{displayname}','{email}',{password})returning uid;"
+        cursor.execute(query)
+        last_id = cursor.fetchone()
+        user_id = last_id[0]
+
+        connection.commit()
+        count = cursor.rowcount
+        print(count, "Record inserted successfully into table")
+
+        connection.close()
+        return user_id,201
+    else:
+        connection.close()
+        return f"{email} Already Registered"
+
+@app.route('/signin', methods=['POST'])
+def login_user_by_get_request():
+    if request.method == 'GET':
+        request_data = request.get_json()
+        # displayname = request_data['displayName']
+        email = request_data['email']        
+        password = request_data['password']
+        
+    # print("displayname", displayname)
+    print("email", email)
+    print("password", password)
+
+    connection = psycopg2.connect(
+        host="127.0.0.1",
+        port="5432",
+        database="postgres",
+        user="postgres",
+        password="admin",
+    )
+    cursor = connection.cursor()
+    query = f"search * from userauth where email = {email}"
+    cursor.execute(query)
+    user = cursor.fetchone()
+    # user_id = user[0]
+    connection.close()
+    if user:
+        return jsonify(user),201 
+    else:
+        return "user not found"
+
+    
+
 
 
 app.run(debug=True)
