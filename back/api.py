@@ -1,9 +1,8 @@
 import os
-from flask import Flask, json, jsonify, request , send_from_directory
+from flask import Flask, json, jsonify, request, send_from_directory
 from flask_restful import Api, Resource
 import psycopg2
 import base64
-
 
 
 app = Flask(__name__)
@@ -11,14 +10,14 @@ api = Api(app)
 
 
 cwd = os.getcwd()
-print(cwd)
+
 
 UPLOAD_DIRECTORY = f"{cwd}/api_uploaded_files"
 if not os.path.exists(UPLOAD_DIRECTORY):
     os.makedirs(UPLOAD_DIRECTORY)
-print(UPLOAD_DIRECTORY)
 cwd = os.getcwd()
-print(cwd)
+
+
 @app.route("/files")
 def list_files():
     """Endpoint to list files on the server."""
@@ -28,12 +27,13 @@ def list_files():
         if os.path.isfile(path):
             files.append(filename)
     return jsonify(files)
-    
-    
+
+
 @app.route("/files/<path:path>")
 def get_file(path):
     """Download a file."""
     return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
+
 
 @app.route('/users')
 def get_all_users_with_address():
@@ -58,13 +58,11 @@ def get_all_users_with_address():
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-    
     # for id in usersid:
     #     idquery = f"select * from personaldetails where id={id}"
     #     cursor.execute(idquery)
     #     querydata = cursor.fetchall()
-        
-        
+
     # userdata = []
     # for index, item in enumerate(rows):
     #     usercolumnValue = {}
@@ -72,11 +70,11 @@ def get_all_users_with_address():
     #     for i in colnames:
     #         usercolumnValue[i] = item[j]
     #         j += 1
-    
+
     # userdata.append(usercolumnValue)
     # print("userdata ===>",userdata)
     idquerydata = []
-    i=0
+    i = 0
     for id in usersid:
         addressquery = f"select * from useraddress where userid={id}"
         cursor.execute(addressquery)
@@ -89,14 +87,13 @@ def get_all_users_with_address():
                 columnValue[addresscolnames[index]] = item
             addresslist.append(columnValue)
         idquerydata.append(addresslist)
-        newr =[]
-    
-    j = 0    
+        newr = []
+
+    j = 0
     for r in result:
         r["addresslist"] = idquerydata[j]
         newr.append(r)
-        j +=1
-    
+        j += 1
 
         # userdata.append({"addresslist":addresslist})
     # idquerydata.append(newr)
@@ -104,6 +101,7 @@ def get_all_users_with_address():
     connection.close()
 
     return jsonify(newr)
+
 
 @app.route('/users/<int:id>')
 def get_user_json_by_id(id):
@@ -126,7 +124,6 @@ def get_user_json_by_id(id):
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-
     addressquery = f"select * from useraddress where userid={id}"
     cursor.execute(addressquery)
     addressdata = cursor.fetchall()
@@ -141,11 +138,12 @@ def get_user_json_by_id(id):
     columnValue["addresslist"] = addresslist
     if result != []:
         result = result[0]
-        result["addresslist"] =addresslist
+        result["addresslist"] = addresslist
         return jsonify(result)
     else:
-        result = ["Not Found"]        
+        result = ["Not Found"]
     connection.close()
+
 
 def get_user_by_id(id):
     connection = psycopg2.connect(
@@ -167,7 +165,6 @@ def get_user_by_id(id):
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-
     addressquery = f"select * from useraddress where userid={id}"
     cursor.execute(addressquery)
     addressdata = cursor.fetchall()
@@ -182,12 +179,11 @@ def get_user_by_id(id):
     columnValue["addresslist"] = addresslist
     if result != []:
         result = result[0]
-        result["addresslist"] =addresslist
+        result["addresslist"] = addresslist
         return result
     else:
-        result = ["Not Found"]        
+        result = ["Not Found"]
     connection.close()
-
 
 
 @app.route('/users/create', methods=['POST'])
@@ -203,7 +199,7 @@ def create_user_by_post_request():
         dob = request_data['dob']
         # image = request_data['pictures']
         # print("image ===>>>",image('pictures'))
-    
+
     # image = image[0]
     # imaged = base64.b64decode(image)
     # print("image==>",imaged)
@@ -217,11 +213,10 @@ def create_user_by_post_request():
     # print(request_data)
     addressarray = request_data['addressBoxList']
     # print("addressarray ==>", addressarray)
-    
+
     # with open(os.path.join(UPLOAD_DIRECTORY, filename), "wb") as fp:
     #     fp.write(request.data)
 
-    
     connection = psycopg2.connect(
         host="127.0.0.1",
         port="5432",
@@ -264,7 +259,7 @@ def create_user_by_post_request():
 
     connection.close()
     result = get_all_users_with_address()
-    return result,201
+    return result, 201
 
 
 @app.route('/users/delete/<int:id>')
@@ -470,10 +465,11 @@ def get_users_by_state_id(id):
 def create_userlogin_by_post_request():
     if request.method == 'POST':
         request_data = request.get_json()
+        print
         displayname = request_data['displayName']
-        email = request_data['email']        
+        email = request_data['email']
         password = request_data['password']
-        
+
     print("displayname", displayname)
     print("email", email)
     print("password", password)
@@ -486,12 +482,13 @@ def create_userlogin_by_post_request():
         password="admin",
     )
     cursor = connection.cursor()
-    query_user_verify = f"select * from userauth where email = {email}"
+    query_user_verify = f"select * from userauth where email = '{email}'"
     cursor.execute(query_user_verify)
     rows = cursor.fetchall()
-    if (rows != []):
+    print(rows)
+    if (rows == []):
 
-        query = f"INSERT INTO userauth(displayname,email,password) VALUES ('{displayname}','{email}',{password})returning uid;"
+        query = f"INSERT INTO userauth(displayname,email,password) VALUES ('{displayname}','{email}','{password}')returning uid;"
         cursor.execute(query)
         last_id = cursor.fetchone()
         user_id = last_id[0]
@@ -501,19 +498,20 @@ def create_userlogin_by_post_request():
         print(count, "Record inserted successfully into table")
 
         connection.close()
-        return user_id,201
+        return jsonify(user_id), 200
     else:
         connection.close()
-        return f"{email} Already Registered"
+        print(f"{email} Already Registered")
+        return jsonify(f"{email} Already Registered"), 409
+
 
 @app.route('/signin', methods=['POST'])
 def login_user_by_get_request():
-    if request.method == 'GET':
+    if request.method == 'POST':
         request_data = request.get_json()
-        # displayname = request_data['displayName']
-        email = request_data['email']        
+        email = request_data['email']
         password = request_data['password']
-        
+
     # print("displayname", displayname)
     print("email", email)
     print("password", password)
@@ -526,18 +524,33 @@ def login_user_by_get_request():
         password="admin",
     )
     cursor = connection.cursor()
-    query = f"search * from userauth where email = {email}"
+    query = f"select * from userauth where email = '{email}'"
     cursor.execute(query)
     user = cursor.fetchone()
+    colnames = [desc[0] for desc in cursor.description]
     # user_id = user[0]
     connection.close()
     if user:
-        return jsonify(user),201 
+        if (user[3] == password):
+            columnValue = {}
+            for index, item in enumerate(user):
+                if (index != 3):
+                    columnValue[colnames[index]] = item
+                    
+            print(columnValue)
+            columnValue["status"] = 201
+            return jsonify(columnValue)
+        else:
+            data = {
+                "message":"Email or Password Incorrect",
+                "status" : 401
+            }
+            return jsonify(data)
     else:
-        return "user not found"
-
-    
-
-
+        data = {
+                "message":"User Not Found",
+                "status" : 404
+            }
+        return jsonify(data)
 
 app.run(debug=True)
