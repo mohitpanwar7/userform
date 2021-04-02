@@ -10,8 +10,7 @@
         padding: 25 px;
     }
     .option {
-        width: 50%;
-        height: 100%;
+        margin-left: 12%;
         display: flex;
         color: white;
         align-items: right;
@@ -19,5 +18,19 @@
         .option {
             padding: 10px 15px;
         }
+    }
+    .displayname {
+        color: white;
+        font-size: larger;
+        margin-left: 25%;
+        display: flex;
+        align-items: right;
+    }
+    .email {
+        color: white;
+        font-size: larger;
+        margin-left: 5%;
+        display: flex;
+        align-items: right;
     }
 }

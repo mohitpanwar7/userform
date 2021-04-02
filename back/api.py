@@ -2,7 +2,6 @@ import os
 from flask import Flask, json, jsonify, request, send_from_directory
 from flask_restful import Api, Resource
 import psycopg2
-import base64
 
 
 app = Flask(__name__)
@@ -24,16 +23,18 @@ def list_files():
     files = []
     for filename in os.listdir(UPLOAD_DIRECTORY):
         path = os.path.join(UPLOAD_DIRECTORY, filename)
+        filename = filename.split(".")
+        filename = filename[0]
         if os.path.isfile(path):
             files.append(filename)
     return jsonify(files)
 
 
-@app.route("/files/<path:path>")
-def get_file(path):
-    """Download a file."""
-    return send_from_directory(UPLOAD_DIRECTORY, path, as_attachment=True)
-
+@app.route("/files/<int:id>")
+def get_file(id):
+    image = send_from_directory(UPLOAD_DIRECTORY, f"{id}.jpg", as_attachment=True)
+    print("image",image)
+    return image
 
 @app.route('/users')
 def get_all_users_with_address():
@@ -258,8 +259,19 @@ def create_user_by_post_request():
     print(count, "Record inserted successfully into table")
 
     connection.close()
-    result = get_all_users_with_address()
-    return result, 201
+
+    return jsonify(user_id), 201
+
+
+@app.route('/users/upload/image/<int:id>', methods=['POST'])
+def user_image_upload(id):
+    if request.method == 'POST':
+        file = request.files['file']
+        print("image==> ", file)
+
+        file.save(os.path.join(UPLOAD_DIRECTORY, f'{id}'+'.jpg'))
+
+    return jsonify(f"image uploaded of user id {id}"), 201
 
 
 @app.route('/users/delete/<int:id>')
@@ -536,21 +548,22 @@ def login_user_by_get_request():
             for index, item in enumerate(user):
                 if (index != 3):
                     columnValue[colnames[index]] = item
-                    
+
             print(columnValue)
             columnValue["status"] = 201
             return jsonify(columnValue)
         else:
             data = {
-                "message":"Email or Password Incorrect",
-                "status" : 401
+                "message": "Email or Password Incorrect",
+                "status": 401
             }
             return jsonify(data)
     else:
         data = {
-                "message":"User Not Found",
-                "status" : 404
-            }
+            "message": "User Not Found",
+            "status": 404
+        }
         return jsonify(data)
+
 
 app.run(debug=True)

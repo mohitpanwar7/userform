@@ -11,7 +11,7 @@ import './userdetails.styles.css';
 // import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
 import DeleteButton from "../../component/userdeletebutton/userdeletebutton.component";
 import AddressData from "../../component/useraddresscolumn/useraddresscolumn.component";
-
+import UserImage from "../../component/userimage/userimage.component";
 // function StateUsers() {function StateUsers() {
 //   let location = useLocation();
 //   console.log(location);
@@ -34,6 +34,16 @@ class UserTable extends React.Component {
         dataField: 'id',
         text: 'Id',
         filter: textFilter()
+      },
+      {
+        dataField: 'id',
+        text: 'Image',
+        sort: true,
+        formatter : (value) => (
+          <div>
+            <UserImage value={value}/>
+          </div>
+        )
       },
       {
         dataField: 'firstname',

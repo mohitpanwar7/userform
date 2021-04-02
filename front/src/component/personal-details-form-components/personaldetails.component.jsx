@@ -10,6 +10,7 @@ import update from 'react-addons-update';
 import ImageUploader from "react-images-upload";
 
 
+
 const emailRegex = RegExp(
     /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 );
@@ -57,7 +58,7 @@ class PersonalDetailsFormComponents extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            pictures: [],
+            file : null,
             firstname: '',
             lastname: '',
             mobilenumber: '',
@@ -97,7 +98,7 @@ class PersonalDetailsFormComponents extends React.Component {
             ],
 
         }
-        this.onDrop = this.onDrop.bind(this);
+        
     };
 
 
@@ -115,8 +116,22 @@ class PersonalDetailsFormComponents extends React.Component {
             }).then(r => r.json())
                 .then(res => {
                     if (res) {
-                        this.setState({ show: true })
                         console.log("response==>", res)
+                        // this.setState({ show: true })
+                        let data = new FormData();
+                        data.append("file", this.state.file[0]);
+                        console.log("data==>",this.state.file[0])
+                        fetch(`http://127.0.0.1:5000/users/upload/image/${res}`, {
+                            method: 'POST',
+                            headers: { },
+                            body: data
+                        }).then(r => r.json())
+                            .then(res => {
+                                if (res) {
+                                    this.setState({ show: true })
+                                    console.log("response==>", res)
+                                }
+                            })
                     }
                 })
 
@@ -129,7 +144,7 @@ class PersonalDetailsFormComponents extends React.Component {
 
     handleChange = e => {
         // e.preventDefault();
-        const { name, value } = e.target;
+        const { name, value} = e.target;
         let formErrors = { ...this.state.formErrors };
 
         switch (name) {
@@ -167,7 +182,10 @@ class PersonalDetailsFormComponents extends React.Component {
         this.setState({ formErrors, [name]: value }, () => console.log(this.state));
     };
 
-
+    handleFileChange = e => {
+        const { name, files} = e.target;
+        this.setState({ file:files});
+    }
 
 
     addaddressbox = () => {
@@ -233,18 +251,6 @@ class PersonalDetailsFormComponents extends React.Component {
         }));
     }
 
-    onDrop(pictureFiles, pictureDataURLs) {
-        let image = "";
-        let reader = new FileReader();
-        reader.readAsDataURL(pictureFiles);
-        reader.onload = function () {
-            image = reader.result;
-        };
-
-        this.setState({
-            pictures: image
-        })
-    }
 
     render() {
         const { formErrors } = this.state;
@@ -256,16 +262,8 @@ class PersonalDetailsFormComponents extends React.Component {
 
                 <Form onSubmit={this.handleSubmit} >
                     <div className="form-div row">
-                        <div className="col-md-4">
-                            <ImageUploader
-                                withIcon={false}
-                                buttonText="Choose User Image"
-                                onChange={this.onDrop}
-                                imgExtension={[".jpg", ".gif", ".png"]}
-                                maxFileSize={5242880}
-                            />
-                        </div>
-
+                       
+                        <FormInput className="col-md-4" label="User Image" name="file" type="file" placeholder="Select User image" onChange={this.handleFileChange}/>
 
                         <FormInput className="col-md-4" inputClassName={formErrors.firstname.length > 0 ? "error" : ""}
                             label="First Name" name="firstname" type="text" placeholder="Enter First Name"
