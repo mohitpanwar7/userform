@@ -9,7 +9,7 @@ class UserImage extends React.Component {
         
         return (
             <div>
-                <img src={`http://localhost:5000/files/${id}`} border={3} height={100} width={100}></img>
+                <img src={`http://localhost:5000/files/${id}`} border={3} height={130} width={130} alt="User Image"></img>
             </div>
         );
 

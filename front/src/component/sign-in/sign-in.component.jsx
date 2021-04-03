@@ -47,6 +47,8 @@ class SignIn extends React.Component {
               Cookies.set('userid', response.uid);
               Cookies.set('email', response.email);
               Cookies.set('displayname', response.displayname);
+              var sessionid = response.sessionid.split(":")
+              Cookies.set('session', sessionid[1]);
               this.setState({ userValid:true ,show:true })
               this.props.userauth();
             }else {

@@ -59,21 +59,6 @@ def get_all_users_with_address():
             columnValue[colnames[index]] = item
         result.append(columnValue)
 
-    # for id in usersid:
-    #     idquery = f"select * from personaldetails where id={id}"
-    #     cursor.execute(idquery)
-    #     querydata = cursor.fetchall()
-
-    # userdata = []
-    # for index, item in enumerate(rows):
-    #     usercolumnValue = {}
-    #     j = 0
-    #     for i in colnames:
-    #         usercolumnValue[i] = item[j]
-    #         j += 1
-
-    # userdata.append(usercolumnValue)
-    # print("userdata ===>",userdata)
     idquerydata = []
     i = 0
     for id in usersid:
@@ -96,11 +81,7 @@ def get_all_users_with_address():
         newr.append(r)
         j += 1
 
-        # userdata.append({"addresslist":addresslist})
-    # idquerydata.append(newr)
-
     connection.close()
-
     return jsonify(newr)
 
 

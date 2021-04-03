@@ -17,6 +17,7 @@ const Header = ({userauth}) => {
     Cookies.remove('userid', { path: '' }); 
     Cookies.remove('email', { path: '' }); 
     Cookies.remove('displayname', { path: '' }); 
+    Cookies.remove('session', { path: '' }); 
     console.log("userauth=====>",userauth)
     newuserauth()
   };
