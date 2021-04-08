@@ -1,7 +1,6 @@
 import React from "react";
 import { Form } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css';
-// import './selectstate.styles.css';
+import styles from '../styles/selectstate.module.css';
 
 class CountryStateSelection extends React.Component {
     constructor(props) {
@@ -95,7 +94,7 @@ class CountryStateSelection extends React.Component {
             
 
 
-                    <div className="state-div row mx-0"  >
+                    <div className={`${styles.statediv} row mx-0`}  >
                         <Form.Group className="col-md-6">
                             <Form.Label>Country</Form.Label>
                             <Form.Control as="select" onChange={(e) => this.statedown(e.target.value)} required>

@@ -200,3 +200,12 @@ fieldset {
     border-radius: 20px;
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
+
+.not-found {
+    text-align: center;
+}
+
+.not-found a {
+    color: #4979ff;
+    text-decoration: underline;
+}

@@ -1,14 +1,14 @@
-import Header from '../components/header.component';
+import React, { useEffect } from "react";
 import HomePage from '../components/homepage.component';
-// import PersonalDetailsFormComponents from '../components/personadetails.component';
-
 
 const form = () => {
+
     return (
-        <div style={{ marginTop: "100px" }}>
-            <HomePage/>
+        <div style={{ marginTop: "50" }}>
+            <HomePage />
         </div>
-    );
+    )
+
 }
 
 export default form;

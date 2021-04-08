@@ -1,12 +1,12 @@
 import React from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import FormInput from '../form-input/form-input.component';
-import CustomButton from '../custom-button/custom-button.component';
+import FormInput from './form-input-sign-in-and-sign-out.component';
+import CustomButton from './custom-button.component';
 import md5 from 'md5';
 import Cookies from "js-cookie";
-import './sign-in.styles.scss';
-import AuthApi from "../../AuthApi";
-
+// import './sign-in.styles.scss';
+import AuthApi from "./AuthApi";
+import styles from '../styles/sign-in.module.scss'
 
 
 
@@ -82,7 +82,7 @@ class SignIn extends React.Component {
   render() {
     const handleClose = () => this.setState({ show: false })
     return (
-      <div className='sign-in'>
+      <div className={styles.signin}>
         <h2>I already have an account</h2>
         <span>Sign in with your email and password</span>
 
@@ -103,7 +103,7 @@ class SignIn extends React.Component {
             label='password'
             required
           />
-          <div className='buttons'>
+          <div className={styles.buttons}>
             <CustomButton type='submit'> Sign in </CustomButton>
 
           </div>

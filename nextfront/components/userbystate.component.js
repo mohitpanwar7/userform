@@ -1,10 +1,15 @@
 import React from "react";
 import { DropdownButton, Dropdown, Button, Form } from "react-bootstrap";
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Link } from 'react-router-dom';
-import './userbystate.styles.css';
+import Link from 'next/link';
+// import './userbystate.styles.css';
+import { withRouter } from 'next/router'
+// import { WithRouterProps } from 'next/dist/client/with-router';
+// const router = withRouter();
+       
 
-export class StateSelect extends React.Component {
+
+
+class StateSelect extends React.Component {
 
     constructor(props) {
         super(props);
@@ -58,9 +63,24 @@ export class StateSelect extends React.Component {
         }
 
     }
+    // handleClick = (e) => {
+    //     const router = useRouter()
+    //     e.preventDefault()
+    //     router.push()
+    // }
+
+    
 
     render() {
-        return (
+        // const ButtonLink = React.forwardRef(({ onClick, href , ref}) => {
+        //     return (
+        //         <a href={href} onClick={onClick} ref={this.state.selectedstateid}>
+        //             {ref}
+        //         </a>
+        //     )
+        // })
+        const { router } = this.props;
+         return (
             <div className="main-div">
                 <fieldset>
 
@@ -89,7 +109,10 @@ export class StateSelect extends React.Component {
 
                         </Form.Group>
                         {console.log("users: ==>", this.state.users)}
-                        {(this.state.users != "Users Not Found" && this.state.users != null) ? (<div><Form.Group className="col-md-4"><Form.Label>Selected State : <span style={{ color: "blue" }}>{this.state.selectedstatename}</span> </Form.Label ><Link to={{ pathname: '/users', stateid: this.state.selectedstateid }} ><Button variant="info" size="sm">Search Users</Button></Link></Form.Group></div>) : ""}
+                        {(this.state.users != "Users Not Found" && this.state.users != null) ? (<div><Form.Group className="col-md-4"><Form.Label>Selected State : <span style={{ color: "blue" }}>{this.state.selectedstatename}</span> </Form.Label ><Button variant="info" size="sm" onClick={() => {router.push({ pathname: '/usersbystateid/[stateid]', query: {stateid: this.state.selectedstateid} })}}>Search Users</Button></Form.Group></div>) : ""}
+                        {/* {(this.state.users != "Users Not Found" && this.state.users != null) ? (<div><Form.Group className="col-md-4"><Form.Label>Selected State : <span style={{ color: "blue" }}>{this.state.selectedstatename}</span> </Form.Label><Link href="/users" ref={this.state.selectedstateid} passHref>
+                        <Button variant="info" size="sm">Search Users {this.state.selectedstateid}</Button>
+                        </Link></Form.Group></div>) : ""} */}
 
                     </div>
 
@@ -98,3 +121,5 @@ export class StateSelect extends React.Component {
         )
     }
 }
+
+export default withRouter(StateSelect);

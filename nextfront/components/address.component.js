@@ -1,7 +1,6 @@
 import React from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
 import CountryStateSelection from './selectstate.component';
-import { FormInput } from './form.component';
+import { FormInput } from './form-input.component';
 
 
 class AddressComponents extends React.Component {

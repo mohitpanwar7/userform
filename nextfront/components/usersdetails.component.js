@@ -1,17 +1,15 @@
 import React from 'react';
-// import { useLocation } from "react-router-dom";
-// import { Table } from 'react-bootstrap';
 import BootstrapTable from 'react-bootstrap-table-next';
 // import { TableHeaderColumn } from 'react-bootstrap-table-next';
 import axios from 'axios';
 import filterFactory, { textFilter } from 'react-bootstrap-table2-filter';
-import paginationFactory from 'react-bootstrap-table2-paginator';
+// import paginationFactory from 'react-bootstrap-table2-paginator';
 // import { Button } from 'react-bootstrap';
-import './userdetails.styles.css';
+// import './userdetails.styles.css';
 // import cellEditFactory, { Type } from 'react-bootstrap-table2-editor';
-import DeleteButton from "../../component/userdeletebutton/userdeletebutton.component";
-import AddressData from "../../component/useraddresscolumn/useraddresscolumn.component";
-import UserImage from "../../component/userimage/userimage.component";
+import DeleteButton from "../components/userdeletebutton.component";
+import AddressData from "../components/useraddresscolumn.component";
+import UserImage from "../components/userimage.component";
 
 class UserTable extends React.Component {
   constructor(props) {
@@ -92,7 +90,7 @@ class UserTable extends React.Component {
       ]
     }
   }
-  stateid = this.props.location.stateid; 
+  stateid = this.props.stateid; 
   componentDidMount(props) {
     fetch(`http://localhost:5000/users/state/${this.stateid}`)
       .then((response) => response.json())

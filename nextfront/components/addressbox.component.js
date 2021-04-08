@@ -1,10 +1,7 @@
 import React from 'react';
 import { Button } from 'react-bootstrap';
-// import './addressbox.styles.css';
+import styles from '../styles/addressbox.module.css';
 import AddressComponents from './address.component';
-import 'bootstrap/dist/css/bootstrap.min.css';
-
-
 
 class AddressBox extends React.Component {
   constructor(props) {
@@ -67,11 +64,11 @@ class AddressBox extends React.Component {
 
   render() {
     return (
-      <div className="address-div">
-        <fieldset>
-          <legend>
-            <Button variant="success" onClick={this.props.addaddressbox} className="button">+</Button>
-            {this.props.rowlength - 1 ? <Button variant="danger" onClick={this.props.removeaddressbox} className="button">-</Button> : ""}
+      <div className={styles.addressdiv}>
+        <fieldset className={styles.fieldset}>
+          <legend className={styles.legend}>
+            <Button variant="success" onClick={this.props.addaddressbox} className={styles.button}>+</Button>
+            {this.props.rowlength - 1 ? <Button variant="danger" onClick={this.props.removeaddressbox} className={styles.button}>-</Button> : ""}
           </legend>
 
           <AddressComponents countryOptionHandler={this.countryOptionHandler} stateOptionHandler={this.stateOptionHandler} statedata={this.state} formErrors={this.state.formErrors} handleAddressChange={this.handleAddressChange} />

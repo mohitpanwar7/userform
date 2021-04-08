@@ -2,10 +2,9 @@ import React from 'react';
 import Link from 'next/link';
 import { Form, Button, Modal } from 'react-bootstrap';
 // import AddressComponents from './address.component';
-import { FormInput } from './form.component';
+import { FormInput } from './form-input.component';
 import AddressBox from './addressbox.component';
 import update from 'react-addons-update';
-
 import styles from '../styles/personaldetails.module.css';
 
 
@@ -106,8 +105,11 @@ class PersonalDetailsFormComponents extends React.Component {
         e.preventDefault();
         console.log("this.state ==>", this.state)
         this.props.userauth();
+        const auth = true;
         console.log("this.props.auth==>",this.props.auth)
-        if (this.props.auth === true) {
+        
+        if (this.props.auth === true) { 
+        // if (auth === true) {
             if (formValid(this.state)) {
                 console.log("submitcalled")
                 fetch('http://127.0.0.1:5000/users/create', {
@@ -270,26 +272,26 @@ class PersonalDetailsFormComponents extends React.Component {
 
                         <FormInput className="col-md-4" label="User Image" name="file" type="file" placeholder="Select User image" onChange={this.handleFileChange} />
 
-                        <FormInput className="col-md-4" inputClassName={formErrors.firstname.length > 0 ? "styles.error" : ""}
+                        <FormInput className="col-md-4" inputClassName={formErrors.firstname.length > 0 ? `${styles.error}` : ""}
                             label="First Name" name="firstname" type="text" placeholder="Enter First Name"
-                            errorMessage={formErrors.firstname.length > 0 && (<span className="styles.errormessage">{formErrors.firstname}</span>)} onChange={this.handleChange} />
+                            errorMessage={formErrors.firstname.length > 0 && (<span className={styles.errormessage}>{formErrors.firstname}</span>)} onChange={this.handleChange} />
 
-                        <FormInput className="col-md-4" inputClassName={formErrors.lastname.length > 0 ? "styles.error" : ""}
-                            errorMessage={formErrors.lastname.length > 0 && (<span className="styles.errormessage">{formErrors.lastname}</span>)} onChange={this.handleChange}
+                        <FormInput className="col-md-4" inputClassName={formErrors.lastname.length > 0 ? `${styles.error}` : ""}
+                            errorMessage={formErrors.lastname.length > 0 && (<span className={styles.errormessage}>{formErrors.lastname}</span>)} onChange={this.handleChange}
                             label="Last Name" name="lastname" type="text" placeholder="Enter Last Name" />
 
-                        <FormInput className="col-md-4" inputClassName={formErrors.mobilenumber.length > 0 ? "styles.error" : ""}
-                            errorMessage={formErrors.mobilenumber.length > 0 && (<span className="styles.errormessage">{formErrors.mobilenumber}</span>)}
+                        <FormInput className="col-md-4" inputClassName={formErrors.mobilenumber.length > 0 ? `${styles.error}` : ""}
+                            errorMessage={formErrors.mobilenumber.length > 0 && (<span className={styles.errormessage}>{formErrors.mobilenumber}</span>)}
                             onChange={this.handleChange} label="Mobile Number" name="mobilenumber" type="tel" placeholder="Enter Mobile Number" />
 
 
-                        <FormInput className="col-md-4" inputClassName={formErrors.email.length > 0 ? "styles.error" : ""}
-                            errorMessage={formErrors.email.length > 0 && (<span className="styles.errormessage">{formErrors.email}</span>)}
+                        <FormInput className="col-md-4" inputClassName={formErrors.email.length > 0 ? `${styles.error}` : ""}
+                            errorMessage={formErrors.email.length > 0 && (<span className={styles.errormessage}>{formErrors.email}</span>)}
                             label="Email" name="email" type="email" placeholder="Enter Email Id" onChange={this.handleChange} />
 
                         <FormInput className="col-md-2" label="Date of Birth" name="dob" type="date" placeholder="Date of Birth"
-                            inputClassName={formErrors.dob.length > 0 ? "styles.error" : ""} onChange={this.handleChange}
-                            errorMessage={formErrors.dob.length > 0 && (<span className="styles.errormessage">{formErrors.dob}</span>)} />
+                            inputClassName={formErrors.dob.length > 0 ? `${styles.error}` : ""} onChange={this.handleChange}
+                            errorMessage={formErrors.dob.length > 0 && (<span className={styles.errormessage}>{formErrors.dob}</span>)} />
                         <Form.Group className="col-md-2">
                             <Form.Label>Gender</Form.Label>
                             <div>
@@ -303,7 +305,7 @@ class PersonalDetailsFormComponents extends React.Component {
                                     value="male"
                                     onChange={this.handleChange}
                                     required />
-                                <Form.Label inline="true" htmlFor="male" className="styles.label1" >Male</Form.Label>
+                                <Form.Label inline="true" htmlFor="male" className={styles.label1} >Male</Form.Label>
 
                                 <Form.Check
                                     inline="true"
@@ -314,19 +316,19 @@ class PersonalDetailsFormComponents extends React.Component {
                                     value="female"
                                     onChange={this.handleChange}
                                     required />
-                                <Form.Label inline="true" htmlFor="female" className="styles.label2">Female</Form.Label>
+                                <Form.Label inline="true" htmlFor="female" className={styles.label2}>Female</Form.Label>
                             </div>
                         </Form.Group>
 
                         <Form.Group className="col-md-4">
                             <Form.Label>Marital Status</Form.Label>
                             <Form.Control name="maritalstatus" as="select"
-                                className={formErrors.maritalstatus.length > 0 ? "styles.error" : ""} onChange={this.handleChange} required>
+                                className={formErrors.maritalstatus.length > 0 ? `${styles.error}` : ""} onChange={this.handleChange} required>
                                 <option value="">---Select Marital Status---</option>
                                 <option value="single">Single</option>
                                 <option value="married">Married</option>
                             </Form.Control>
-                            {formErrors.maritalstatus.length > 0 && (<span className="styles.errormessage">{formErrors.maritalstatus}</span>)}
+                            {formErrors.maritalstatus.length > 0 && (<span className={styles.errormessage}>{formErrors.maritalstatus}</span>)}
                         </Form.Group>
 
                         {this.state.addressBoxList.map((key, item) => (
@@ -339,11 +341,11 @@ class PersonalDetailsFormComponents extends React.Component {
                             <Form.Check type="checkbox" id="termsandconditions" inline="true" required />
                             <Form.Label htmlFor="termsandconditions" inline="true" name="termsandconditions">Agree to terms & conditions</Form.Label>
                         </Form.Group>
-                        <div className="styles.button-div">
-                            <Button className="styles.submit-button" type="submit">Submit Form</Button>
+                        <div className={styles.buttondiv}>
+                            <Button className="submit-button" type="submit">Submit Form</Button>
 
                             <Link href="/search">
-                                <Button className="styles.submit-button" variant="info" style={{ marginLeft: "15px" }}>Search Users By State</Button>
+                                <Button className="submit-button" variant="info" style={{ marginLeft: "15px" }}>Search Users By State</Button>
                             </Link>
                         </div>
                     </div>

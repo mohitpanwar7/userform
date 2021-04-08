@@ -1,17 +1,17 @@
 import React from 'react';
-import styles from '../styles/form-input.module.scss';
+import { Form } from 'react-bootstrap';
+// import './form.styles.css';
+import styles from '../styles/form.module.css';
 
-const FormInput = ({ handleChange, label, ...otherProps }) => (
-  <div className={styles.group}>
-    <input className="form-input" onChange={handleChange} {...otherProps} />
-    {label ? (
-      <label
-        className={`${otherProps.value.length ? `${styles.shrink}` : '' }` `${styles.forminputlabel}`}
-      >
-        {label}
-      </label>
-    ) : null}
-  </div>
-);
-
-export default FormInput;
+export const FormInput = props => {
+    const { name, className, inputClassName, label, type, placeholder , onChange, errorMessage } = props;
+    return (
+        <Form.Group className={className}>
+            <Form.Label>{label}</Form.Label>
+            <Form.Control className={inputClassName} type={type} name={name} placeholder={placeholder} 
+                onChange={onChange} required ></Form.Control>
+            <div>{errorMessage}</div>
+            {console.log("errormessage ==> ",errorMessage)}
+        </Form.Group>
+    );
+};

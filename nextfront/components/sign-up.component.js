@@ -1,15 +1,12 @@
 import React from 'react';
 
-import FormInput from '../form-input/form-input.component';
+import FormInput from './form-input-sign-in-and-sign-out.component';
 import { Button, Modal } from 'react-bootstrap';
-import CustomButton from '../custom-button/custom-button.component';
+import CustomButton from './custom-button.component';
 import md5 from 'md5';
+import styles from '../styles/sign-up.module.scss';
 
-
-// import { auth, createUserProfileDocument } from '../../firebase/firebase.utils';
-
-
-import './sign-up.styles.scss';
+// import './sign-up.styles.scss';
 
 
 class SignUp extends React.Component {
@@ -80,7 +77,7 @@ class SignUp extends React.Component {
         const { displayName, email, prevPassword, prevConfirmPassword } = this.state;
         const handleClose = () => this.setState({ show: false })
         return (
-            <div className='sign-up'>
+            <div className={styles.signup}>
                 <h2 className="title">I do not have a account</h2>
                 <span>Sign up with your email and password</span>
                 <form className="sign-up-form" onSubmit={this.handleSubmit}>
