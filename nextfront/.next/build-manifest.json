@@ -29,15 +29,10 @@
       "static/chunks/main.js",
       "static/chunks/pages/_error.js"
     ],
-    "/search": [
+    "/tasks": [
       "static/chunks/webpack.js",
       "static/chunks/main.js",
-      "static/chunks/pages/search.js"
-    ],
-    "/usersbystateid/[id]": [
-      "static/chunks/webpack.js",
-      "static/chunks/main.js",
-      "static/chunks/pages/usersbystateid/[id].js"
+      "static/chunks/pages/tasks.js"
     ]
   },
   "ampFirstPages": []
