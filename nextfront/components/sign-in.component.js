@@ -48,18 +48,8 @@ class SignIn extends React.Component {
               Cookies.set('email', response.email);
               Cookies.set('firstname', response.firstname );
               Cookies.set('lastname', response.lastname );
-              // var sessionid = response.sessionid.split(":")
               Cookies.set('token', response.token);
-              // fetch(`http://localhost:5000/set/${response.email}`, {
-              //   method: 'POST',
-              //   headers: { 'Content-type': 'application/json' },
-              //   // body: JSON.stringify(data)
-              // })
-              //   .then(response => response.json())
-              //   .then(response => {
-              //     Cookies.set('session', response);
-              //     console.log("cookie response from set api ==>",response)
-              //   })
+              
               this.setState({ userValid: true, show: true })
               this.props.userauth();
 

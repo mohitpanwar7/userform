@@ -35,7 +35,8 @@ class UserTasks extends React.Component {
             showallstatusbutton: false,
             deleteStatus: null,
             allStatus: [],
-            showtimelinebutton: false,
+            showtimelinebutton: true,
+            component : "mytimeline",
             ranges: {
                 startDate: new Date(),
                 endDate: addDays(new Date(), -7),
@@ -250,14 +251,14 @@ class UserTasks extends React.Component {
         return (
             <div >
                 <div style={{ textAlign: 'right' }}>
-                    {this.state.showtimelinebutton ? (<Button variant="warning" onClick={() => { this.setState({ showtimelinebutton: false }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Assign Tasks</Button>) : (<Button variant="warning" onClick={() => { this.setState({ showtimelinebutton: true }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>My Timeline</Button>)}
+                    {this.state.showtimelinebutton ? (<Button variant="warning" onClick={() => { this.setState({ showtimelinebutton: false, component:"assigntask" }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Assign Tasks</Button>) : (<Button variant="warning" onClick={() => { this.setState({ showtimelinebutton: true, component:"mytimeline" }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>My Timeline</Button>)}
                     {this.state.showallstatusbutton ? (<Button variant="warning" onClick={this.showAllStatus} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Show All Status </Button>) : ""}
-                    {this.state.datepickershow ? (<Button variant="info" onClick={() => { this.setState({ datepickershow: false }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Show Tasks</Button>) : (<Button variant="info" onClick={() => { this.setState({ datepickershow: true }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Assign Task Filter</Button>)}
+                    {this.state.datepickershow ? (<Button variant="info" onClick={() => { this.setState({ datepickershow: false,component:"assigntask" }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Show Tasks</Button>) : (<Button variant="info" onClick={() => { this.setState({ datepickershow: true, component:"datepicker" }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}>Assign Task Filter</Button>)}
                     <Button variant="success" onClick={() => { this.setState({ statusshow: true }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}> Add Status Type </Button>
                     {this.state.allStatus.length > 0 ? (<Button variant="danger" onClick={() => { this.setState({ deletestatusshow: true }) }} style={{ marginTop: '15px', marginBottom: '15px', marginRight: '20px' }}> Delete Status Type </Button>) : ""}
                 </div>
                 {(() => {
-                    if (this.state.datepickershow == false && this.state.showtimelinebutton ==false ) {
+                    if (this.state.component == "assigntask") {
                         return (<div className="row mx-3">
                             {this.state.allStatus.map((status) => {
                                 return (
@@ -288,44 +289,22 @@ class UserTasks extends React.Component {
                             })}
 
                         </div>)
-                    }
-                })()}
-                {this.state.datepickershow == false ? (<div className="row mx-3">
-                    {this.state.allStatus.map((status) => {
+                    } else if (this.state.component == "datepicker") {
                         return (
-                            <div className="col-md-3 " >
-                                <div style={{ textAlign: 'center' }}><h3>{status.statusname} ({status.taskcount}) </h3></div>
-                                <div className="card" style={{ backgroundColor: '#b3b3b3', color: '#e6e6e6' }}>
-                                    <Button style={{ marginLeft: '-24px', marginRight: '-24px', marginTop: '-24px', borderRadius: '10px' }} onClick={() => { this.setState({ show: true, selectedstatusid: status.id, selectedstatusname: status.statusname, selectedstatussequence: status.statussequence }) }} > Add Task </Button>
-
-                                    {status.alltasks.map((task) => {
-
-                                        return (
-                                            <div className="bg-info card">
-                                                <div style={{ textAlign: 'right', position: 'absolute', right: '10px', top: '8px' }}><Button variant="transparent" onClick={() => this.handleDeleteTask(task.id)}>X</Button></div>
-                                                <div style={{ textAlign: 'right', position: 'absolute', right: '40px', top: '7px' }}><Button variant="transparent" onClick={() => this.handleEditTask(task, status.statusname, status.statussequence)}><img src='/pencil.svg' alt='editicon' height="14px" weight="14px" /></Button></div>
-                                                <ul style={{ listStyle: 'none', padding: '0px' }}>
-                                                    <li>Id:{task.id} </li>
-                                                    <li>Title:{task.title}</li>
-                                                    <li>Comments: {task.comments}</li>
-                                                    <li>Assigned To: {task.firstname} {task.lastname}</li>
-                                                    {task.taskassigndate ? (<li>Assigned Date: {this.getDate(task.taskassigndate)} </li>) : ""}
-                                                    {task.taskdeadline ? (<li>Task Deadline: {this.getDate(task.taskdeadline)} </li>) : ''}
-                                                </ul>
-                                            </div>
-                                        )
-                                    })}
+                            <div>
+                                <DatePicker ranges={this.state.ranges} handleChildState={this.handleChildState.bind(this)} /> <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                                    <Button variant="warning" size="xl" onClick={this.getStatusDatafromDatePicker}> Show Tasks From Selected Dates</Button>
                                 </div>
-                            </div>)
-                    })}
-
-                </div>) : (
-                    <div>
-                        <DatePicker ranges={this.state.ranges} handleChildState={this.handleChildState.bind(this)} /> <div style={{ marginTop: '20px', textAlign: 'center' }}>
-                            <Button variant="warning" size="xl" onClick={this.getStatusDatafromDatePicker}> Show Tasks From Selected Dates</Button>
-                        </div>
-                    </div>
-                )}
+                            </div>
+                        )
+                    } else if (this.state.component == "mytimeline") {
+                        return (
+                            <div>
+                                <MyTimeLine />
+                            </div>
+                        )
+                    } 
+                })()}
                 <div>
                     <Modal show={this.state.deletestatusshow} onHide={handleDeleteStatusClose}>
                         <Modal.Header closeButton>

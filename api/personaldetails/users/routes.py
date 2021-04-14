@@ -89,7 +89,7 @@ def login_user_by_get_request():
             # columnValue["sessionid"] = lastsession[1]
             # print(columnValue["uid"])
             app = personal_details()
-            token = jwt.encode({'userid' : user[0], 'firstname' : user[1], 'lastname' : user[2] , 'email' : user[4] , 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'],algorithm='HS256')
+            token = jwt.encode({'id' : user[0], 'firstname' : user[1], 'lastname' : user[2] , 'email' : user[4] , 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'],algorithm='HS256')
             # jsonify({'token' : token.decode('UTF-8')})
             columnValue["token"] = token
 

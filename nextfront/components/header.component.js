@@ -22,7 +22,7 @@ const Header = ({userauth,auth}) => {
     Cookies.remove('firstname', { path: '' }); 
     Cookies.remove('lastname', { path: '' }); 
     Cookies.remove('token', { path: '' } )
-    console.log("userauth=====>",userauth)
+    
     newuserauth()
   };
 
