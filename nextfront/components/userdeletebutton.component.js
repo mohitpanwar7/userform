@@ -7,7 +7,7 @@ const DeleteButton = (props) => {
     
     const { value, label, className , handleChildState, stateid} = props;
     const deleteuser = async () => {
-        fetch('http://localhost:5000/users/delete/' + value);
+        fetch('/api/users/delete/' + value);
         await handleChildState(stateid);
     }
     

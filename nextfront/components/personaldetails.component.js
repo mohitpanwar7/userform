@@ -6,7 +6,7 @@ import { FormInput } from './form-input.component';
 import AddressBox from './addressbox.component';
 import update from 'react-addons-update';
 import styles from '../styles/personaldetails.module.css';
-
+import md5 from 'md5';
 
 
 const emailRegex = RegExp(
@@ -59,6 +59,8 @@ class PersonalDetailsFormComponents extends React.Component {
             file: null,
             firstname: '',
             lastname: '',
+            prevPassword: '',
+            encPassword: '',
             mobilenumber: '',
             email: '',
             dob: '',
@@ -66,9 +68,11 @@ class PersonalDetailsFormComponents extends React.Component {
             maritalstatus: '',
             termsandconditions: false,
             show: false,
+            validateshow:false,
             formErrors: {
                 firstname: '',
                 lastname: '',
+                prevPassword: '',
                 mobilenumber: '',
                 email: '',
                 dob: '',
@@ -105,26 +109,26 @@ class PersonalDetailsFormComponents extends React.Component {
         e.preventDefault();
         console.log("this.state ==>", this.state)
         this.props.userauth();
-        const auth = true;
-        console.log("this.props.auth==>",this.props.auth)
+        // const auth = true;
+        console.log("this.props.auth==>", this.props.auth)
         
-        if (this.props.auth === true) { 
-        // if (auth === true) {
+        if (this.props.auth === true) {
+            // if (auth === true) {
             if (formValid(this.state)) {
                 console.log("submitcalled")
-                fetch('http://127.0.0.1:5000/users/create', {
+                fetch('/api/users/create', {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(this.state)
                 }).then(r => r.json())
                     .then(res => {
-                        if (res) {
+                        if (res.status != 409) {
                             console.log("response==>", res)
                             // this.setState({ show: true })
                             let data = new FormData();
                             data.append("file", this.state.file[0]);
                             console.log("data==>", this.state.file[0])
-                            fetch(`http://127.0.0.1:5000/users/upload/image/${res}`, {
+                            fetch(`/api/users/upload/image/${res}`, {
                                 method: 'POST',
                                 headers: {},
                                 body: data
@@ -135,6 +139,8 @@ class PersonalDetailsFormComponents extends React.Component {
                                         console.log("response==>", res)
                                     }
                                 })
+                        } else {
+                            this.setState({ validateshow :true });
                         }
                     })
 
@@ -163,6 +169,10 @@ class PersonalDetailsFormComponents extends React.Component {
                 formErrors.lastname =
                     value.length < 3 ? "Minimum 3 characaters required!" : "";
                 break;
+            case "prevPassword":
+                formErrors.prevPassword =
+                    value.length < 4 ? "Minimum 4 characaters required!" : "";
+                break;
             case "email":
                 formErrors.email = emailRegex.test(value)
                     ? ""
@@ -186,7 +196,10 @@ class PersonalDetailsFormComponents extends React.Component {
             default:
                 break;
         }
+        
         this.setState({ formErrors, [name]: value }, () => console.log(this.state));
+        const encPassword = md5(this.state.prevPassword)
+        this.setState({ encPassword : encPassword })
     };
 
     handleFileChange = e => {
@@ -263,6 +276,7 @@ class PersonalDetailsFormComponents extends React.Component {
         const { formErrors } = this.state;
         const statedata = this.state;
         const handleClose = () => this.setState({ show: false });
+        const handleValidateClose = () => this.setState({ validateshow: false });
 
         return (
             <div>
@@ -280,6 +294,10 @@ class PersonalDetailsFormComponents extends React.Component {
                             errorMessage={formErrors.lastname.length > 0 && (<span className={styles.errormessage}>{formErrors.lastname}</span>)} onChange={this.handleChange}
                             label="Last Name" name="lastname" type="text" placeholder="Enter Last Name" />
 
+                        <FormInput className="col-md-4" inputClassName={formErrors.prevPassword.length > 0 ? `${styles.error}` : ""}
+                            errorMessage={formErrors.prevPassword.length > 0 && (<span className={styles.errormessage}>{formErrors.prevPassword}</span>)} onChange={this.handleChange}
+                            label="User Login Password" name="prevPassword" type="password" placeholder="Enter Password For User" />
+
                         <FormInput className="col-md-4" inputClassName={formErrors.mobilenumber.length > 0 ? `${styles.error}` : ""}
                             errorMessage={formErrors.mobilenumber.length > 0 && (<span className={styles.errormessage}>{formErrors.mobilenumber}</span>)}
                             onChange={this.handleChange} label="Mobile Number" name="mobilenumber" type="tel" placeholder="Enter Mobile Number" />
@@ -289,7 +307,7 @@ class PersonalDetailsFormComponents extends React.Component {
                             errorMessage={formErrors.email.length > 0 && (<span className={styles.errormessage}>{formErrors.email}</span>)}
                             label="Email" name="email" type="email" placeholder="Enter Email Id" onChange={this.handleChange} />
 
-                        <FormInput className="col-md-2" label="Date of Birth" name="dob" type="date" placeholder="Date of Birth"
+                        <FormInput className="col-md-2" label="Date of Birth" min="1960-01-01" max="2009-12-31" name="dob" type="date" placeholder="Date of Birth"
                             inputClassName={formErrors.dob.length > 0 ? `${styles.error}` : ""} onChange={this.handleChange}
                             errorMessage={formErrors.dob.length > 0 && (<span className={styles.errormessage}>{formErrors.dob}</span>)} />
                         <Form.Group className="col-md-2">
@@ -357,6 +375,17 @@ class PersonalDetailsFormComponents extends React.Component {
                     <Modal.Body>New User {this.state.firstname} {this.state.lastname} is Created.</Modal.Body>
                     <Modal.Footer>
                         <Button variant="primary" onClick={handleClose}>
+                            Close
+                        </Button>
+                    </Modal.Footer>
+                </Modal>
+                <Modal show={this.state.validateshow} onHide={handleValidateClose}>
+                    <Modal.Header closeButton>
+                        <Modal.Title>Report</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>User With Email :{this.state.email} already registered in database.</Modal.Body>
+                    <Modal.Footer>
+                        <Button variant="warning" onClick={handleValidateClose}>
                             Close
                         </Button>
                     </Modal.Footer>

@@ -39,10 +39,10 @@ class SignUp extends React.Component {
             try {
                 const data = {
                     displayName: this.state.displayName,
-                    email: this.state.email,
+                    email: this.state.email.toLowerCase(),
                     password: this.state.password,
                 }
-                fetch('http://127.0.0.1:5000/signup', {
+                fetch('/api/signup', {
                     method: 'POST',
                     headers: { 'Content-type': 'application/json' },
                     body: JSON.stringify(data)
@@ -78,7 +78,7 @@ class SignUp extends React.Component {
         const handleClose = () => this.setState({ show: false })
         return (
             <div className={styles.signup}>
-                <h2 className="title">I do not have a account</h2>
+                <h2 >I do not have a account</h2>
                 <span>Sign up with your email and password</span>
                 <form className="sign-up-form" onSubmit={this.handleSubmit}>
                     <FormInput

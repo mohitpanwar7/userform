@@ -22,7 +22,7 @@ class StateSelect extends React.Component {
     }
 
     statefetch = (countryid) => {
-        fetch(`http://localhost:5000/country/${countryid}`)
+        fetch(`/api/country/${countryid}`)
             .then((response) => response.json())
             .then(data => {
                 this.setState({ states: data });
@@ -49,7 +49,7 @@ class StateSelect extends React.Component {
             const statedata = value.split(",")
             const statename = statedata[0]
             const stateid = statedata[1]
-            fetch(`http://localhost:5000/users/state/${stateid}`)
+            fetch(`/api/users/state/${stateid}`)
                 .then((response) => response.json())
                 .then(data => {
                     this.setState({ users: data });

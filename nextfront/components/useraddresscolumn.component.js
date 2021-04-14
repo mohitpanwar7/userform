@@ -10,7 +10,7 @@ class AddressData extends React.Component {
 
   async componentDidMount(props) {
     console.log("child state", this.props.value)
-    let response = await fetch(`http://localhost:5000/users/${this.props.value}`);
+    let response = await fetch(`/api/users/${this.props.value}`);
     let data = await response.json();
 
     console.log("response ==>", data)

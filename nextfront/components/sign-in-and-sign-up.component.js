@@ -9,7 +9,7 @@ import styles from '../styles/sign-in-and-sign-up.module.scss';
 const SignInAndSignUpPage = ({userauth}) => (
     <div className={styles.signinandsignup}>
         <SignIn userauth={userauth}/>
-        <SignUp/>
+        {/* <SignUp/> */}
     </div>
 );
 export default SignInAndSignUpPage;

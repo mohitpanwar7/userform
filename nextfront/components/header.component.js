@@ -12,13 +12,15 @@ import AuthApi from "./AuthApi";
 const Header = ({userauth,auth}) => {
   // const auth = React.useContext(AuthApi);
   const newuserauth = userauth;
-  const displayname = Cookies.get('displayname');
+  const firstname = Cookies.get('firstname');
+  const lastname = Cookies.get('lastname');
   const email = Cookies.get('email');
 
   const ClearCookies = () => {
-    Cookies.remove('userid', { path: '' }); 
+    Cookies.remove('id', { path: '' }); 
     Cookies.remove('email', { path: '' }); 
-    Cookies.remove('displayname', { path: '' }); 
+    Cookies.remove('firstname', { path: '' }); 
+    Cookies.remove('lastname', { path: '' }); 
     Cookies.remove('token', { path: '' } )
     console.log("userauth=====>",userauth)
     newuserauth()
@@ -29,7 +31,7 @@ const Header = ({userauth,auth}) => {
 
       <Navbar bg="primary" variant="dark" fixed="top">
         <Navbar.Brand href="">Personal Details Form In Next Js</Navbar.Brand>
-        {auth ? (<a className={styles.displayname}>Hello {displayname}</a>) : "" }
+        {auth ? (<a className={styles.displayname}>Hello, {firstname} {lastname}</a>) : "" }
         {auth ? (<a className={styles.email}>Email Id : {email}</a>) : "" }
         {auth ? (<Link  href='/'><a onClick={() => ClearCookies()} className={styles.option} >SIGN OUT</a></Link>) : "" }
       </Navbar>

@@ -1,9 +1,9 @@
 import os
-from flask import Blueprint,Flask, json, jsonify, request, send_from_directory
+from flask import Blueprint, Flask, json, jsonify, request, send_from_directory
 import psycopg2
 from ..utils import connectionconf
 
-forms = Blueprint('forms',__name__)
+forms = Blueprint('forms', __name__)
 
 cwd = os.getcwd()
 
@@ -29,11 +29,10 @@ def list_files():
 
 @forms.route("/files/<int:id>")
 def get_file(id):
-    image = send_from_directory(UPLOAD_DIRECTORY, f"{id}.jpg", as_attachment=True)
-    print("image",image)
+    image = send_from_directory(
+        UPLOAD_DIRECTORY, f"{id}.jpg", as_attachment=True)
+    print("image", image)
     return image
-
-
 
 
 @forms.route('/users/create', methods=['POST'])
@@ -47,43 +46,49 @@ def create_user_by_post_request():
         gender = request_data['gender']
         maritalstatus = request_data['maritalstatus']
         dob = request_data['dob']
-        
-    addressarray = request_data['addressBoxList']
+        encPassword = request_data['encPassword']
+        addressarray = request_data['addressBoxList']
     connection = connectionconf()
     cursor = connection.cursor()
-    query = f"INSERT INTO personaldetails(firstname,lastname, mobilenumber, email, gender,dob,maritalstatus) VALUES ('{firstname}','{lastname}',{mobilenumber},'{email}','{gender}','{dob}','{maritalstatus}')returning id;"
-    cursor.execute(query)
-    last_id = cursor.fetchone()
-    query2 = "select * from personaldetails;"
-    cursor.execute(query2)
-    rows = cursor.fetchall()
-    user_id = last_id[0]
+    queryforuservalidation = f"select * from personaldetails where email = '{email}';"
+    cursor.execute(queryforuservalidation)
+    recievedinfo = cursor.fetchone()
+    if recievedinfo == None:
 
-    colnames = [desc[0] for desc in cursor.description]
-    result = []
-    for item1 in rows:
-        columnValue = {}
-        for index, item in enumerate(item1):
-            columnValue[colnames[index]] = item
-        result.append(columnValue)
-    for address in addressarray:
-        addressname = address['address']
-        city = address['city']
-        country = address['country']
-        state = address['state']
-        stateid = address['stateid']
-        zipcode = address['zipcode']
-        insertaddressquery = f"INSERT INTO useraddress(userid,address, city, country, state, stateid, zipcode) VALUES ({user_id},'{addressname}','{city}', '{country}' ,'{state}', {stateid},{zipcode});"
-        cursor.execute(insertaddressquery)
+        query = f"INSERT INTO personaldetails(firstname,lastname, password, mobilenumber, email, gender, dob, maritalstatus) VALUES ('{firstname}','{lastname}', '{encPassword}',{mobilenumber},'{email}','{gender}','{dob}','{maritalstatus}')returning id;"
+        cursor.execute(query)
+        last_id = cursor.fetchone()
+        query2 = "select * from personaldetails;"
+        cursor.execute(query2)
+        rows = cursor.fetchall()
+        user_id = last_id[0]
 
-    connection.commit()
-    count = cursor.rowcount
-    print(count, "Record inserted successfully into table")
+        colnames = [desc[0] for desc in cursor.description]
+        result = []
+        for item1 in rows:
+            columnValue = {}
+            for index, item in enumerate(item1):
+                columnValue[colnames[index]] = item
+            result.append(columnValue)
+        for address in addressarray:
+            addressname = address['address']
+            city = address['city']
+            country = address['country']
+            state = address['state']
+            stateid = address['stateid']
+            zipcode = address['zipcode']
+            insertaddressquery = f"INSERT INTO useraddress(userid,address, city, country, state, stateid, zipcode) VALUES ({user_id},'{addressname}','{city}', '{country}' ,'{state}', {stateid},{zipcode});"
+            cursor.execute(insertaddressquery)
 
-    connection.close()
+        connection.commit()
+        count = cursor.rowcount
+        print(count, "Record inserted successfully into table")
 
-    return jsonify(user_id), 201
+        connection.close()
 
+        return jsonify(user_id), 201
+    else :
+        return jsonify({"message":f"{email} Already Registered","status": 409}), 409
 
 @forms.route('/users/upload/image/<int:id>', methods=['POST'])
 def user_image_upload(id):
@@ -116,6 +121,7 @@ def get_all_state_name_and_id():
         return jsonify(result)
     else:
         return jsonify("States Not Found in Database")
+
 
 @forms.route('/state/<int:id>')
 def get_state_name_by_id(id):
@@ -188,4 +194,3 @@ def get_state_by_country_id(id):
         return jsonify(result)
     else:
         return jsonify(f"States with country id: '{id}' Not Found in Database")
-

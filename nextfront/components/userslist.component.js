@@ -92,7 +92,7 @@ class AllUsersTable extends React.Component {
   }
   
   componentDidMount(props) {
-    fetch(`http://localhost:5000/users`)
+    fetch(`/api/users`)
       .then((response) => response.json())
       .then(data => {
         this.setState({ users: data });
@@ -107,7 +107,7 @@ class AllUsersTable extends React.Component {
 
   handleChildState = async (stateid) => {
     
-    let response = await fetch(`http://localhost:5000/users`);
+    let response = await fetch(`/api/users`);
     let data = await response.json();
     
     console.log("response ==>",data)

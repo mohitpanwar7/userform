@@ -19,7 +19,7 @@ class CountryStateSelection extends React.Component {
     // }
 
     statefetch = (countryid) => {
-        fetch(`http://localhost:5000/country/${countryid}`)
+        fetch(`/api/country/${countryid}`)
             .then((response) => response.json())
             .then(data => {
                 this.setState({ states: data });

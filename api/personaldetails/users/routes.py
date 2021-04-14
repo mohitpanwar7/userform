@@ -62,7 +62,7 @@ def login_user_by_get_request():
 
     connection = connectionconf()
     cursor = connection.cursor()
-    query = f"select * from userauth where email = '{email}'"
+    query = f"select * from personaldetails where email = '{email}'"
     cursor.execute(query)
     user = cursor.fetchone()
     colnames = [desc[0] for desc in cursor.description]
@@ -72,7 +72,7 @@ def login_user_by_get_request():
     # db.create_all()
     
     if user:
-        if (user[3] == password):
+        if (user[8] == password):
             columnValue = {}
             for index, item in enumerate(user):
                 if (index != 3):
@@ -89,7 +89,7 @@ def login_user_by_get_request():
             # columnValue["sessionid"] = lastsession[1]
             # print(columnValue["uid"])
             app = personal_details()
-            token = jwt.encode({'userid' : user[0], 'displayname' : user[1] , 'email' : user[2] , 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=5)}, app.config['SECRET_KEY'],algorithm='HS256')
+            token = jwt.encode({'userid' : user[0], 'firstname' : user[1], 'lastname' : user[2] , 'email' : user[4] , 'exp' : datetime.datetime.utcnow() + datetime.timedelta(minutes=15)}, app.config['SECRET_KEY'],algorithm='HS256')
             # jsonify({'token' : token.decode('UTF-8')})
             columnValue["token"] = token
 

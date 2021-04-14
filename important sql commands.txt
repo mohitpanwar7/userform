@@ -14,3 +14,6 @@ SELECT * FROM personaldetails left JOIN useraddress on personaldetails.id = user
 
 alter id sequence ===>
 alter sequence personaldetails_id_seq restart with 1;
+
+
+create table tasks(id serial primary key, title varchar, comments varchar, statusid integer, assignedto varchar,assignedtoid integer

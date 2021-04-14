@@ -14,7 +14,7 @@ function MyApp({ Component, pageProps }) {
     var token = Cookies.get("token")
     if (token != undefined) {
       console.log("token======>", token)
-      fetch('http://localhost:5000/userauth',
+      fetch('/api/userauth',
         {
           method: 'POST',
           headers: { 'Content-type': 'application/json' },
@@ -24,22 +24,24 @@ function MyApp({ Component, pageProps }) {
         .then(response => {
           console.log("token response===>", response)
           if (response.message != "Token is invalid!") {
-            Cookies.set("userid", response.userid);
+            Cookies.set("id", response.id);
             Cookies.set("email", response.email);
-            Cookies.set("displayname", response.displayname);
+            Cookies.set("firstname", response.firstname);
+            Cookies.set("lastname", response.lastname);
           } else {
-            Cookies.remove("userid", { path: '' });
+            Cookies.remove("id", { path: '' });
             Cookies.remove("email", { path: '' });
-            Cookies.remove("displayname", { path: '' });
+            Cookies.remove("firstname", { path: '' });
+            Cookies.remove("lastname", { path: '' });
             Cookies.remove("token", { path: '' });
             // this.setState({ auth: false });
             setAuth(false)
           }
 
         })
-      const userid = Cookies.get("userid")
-      console.log("cookiesuserid", userid);
-      if (userid != null) {
+      const id = Cookies.get("id")
+      console.log("cookiesuserid", id);
+      if (id != null) {
         setAuth(true)
       } else {
         setAuth(false)

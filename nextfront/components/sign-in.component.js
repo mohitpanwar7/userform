@@ -32,10 +32,10 @@ class SignIn extends React.Component {
     this.setState({ encPassword: encpassword }, () => {
       try {
         const data = {
-          email: this.state.email,
+          email: this.state.email.toLowerCase(),
           password: this.state.encPassword,
         }
-        fetch('http://127.0.0.1:5000/signin', {
+        fetch('/api/signin', {
           method: 'POST',
           headers: { 'Content-type': 'application/json' },
           body: JSON.stringify(data)
@@ -44,9 +44,10 @@ class SignIn extends React.Component {
           .then(response => {
             if (response.status != 401 && response.status != 404) {
               console.log("response==>", response)
-              Cookies.set('userid', response.uid);
+              Cookies.set('id', response.id);
               Cookies.set('email', response.email);
-              Cookies.set('displayname', response.displayname);
+              Cookies.set('firstname', response.firstname );
+              Cookies.set('lastname', response.lastname );
               // var sessionid = response.sessionid.split(":")
               Cookies.set('token', response.token);
               // fetch(`http://localhost:5000/set/${response.email}`, {
@@ -83,7 +84,7 @@ class SignIn extends React.Component {
     const handleClose = () => this.setState({ show: false })
     return (
       <div className={styles.signin}>
-        <h2>I already have an account</h2>
+        <h2 >I already have an account</h2>
         <span>Sign in with your email and password</span>
 
         <form onSubmit={this.handleSubmit}>
