@@ -9,7 +9,8 @@ class MyTimeLine extends React.Component {
     this.state = {
       auth: null,
       id: null,
-      tasks: null
+      tasks: null,
+      status: this.props.statuslist
     }
   }
   userauth = () => {
@@ -56,6 +57,8 @@ class MyTimeLine extends React.Component {
     }
   }
 
+
+
   fetchTaskforId = () => {
     fetch(`api/status/tasks/mytimeline`, {
       method: 'POST',
@@ -76,6 +79,7 @@ class MyTimeLine extends React.Component {
   TableData = () => {
     console.log("tablecalled")
     console.log("this.state", this.state)
+    console.log("this.state.status", this.props.statuslist)
     if (this.state.tasks != null) {
       return (
         <div className="mx-3">
@@ -86,6 +90,7 @@ class MyTimeLine extends React.Component {
                 <th>Tilte</th>
                 <th>Comments</th>
                 <th>Status Id</th>
+                <th>Status Name</th>
                 <th>Task Assign Date</th>
                 <th>Task Deadline</th>
               </tr>
@@ -111,6 +116,7 @@ class MyTimeLine extends React.Component {
                         <td key={task.id}>{task.title}</td>
                         <td key={task.id}>{task.comments}</td>
                         <td key={task.id}>{task.statusid}</td>
+                        <td key={task.id}>{task.statusname}</td>
 
                         <td key={task.id}>{task.taskassigndate}</td>
                         <td key={task.id}>{task.taskdeadline}</td>
@@ -141,7 +147,7 @@ class MyTimeLine extends React.Component {
                         <td key={task.id}>{task.title}</td>
                         <td key={task.id}>{task.comments}</td>
                         <td key={task.id}>{task.statusid}</td>
-
+                        <td key={task.id}>{task.statusname}</td>
                         <td key={task.id}>{task.taskassigndate}</td>
                         <td key={task.id}>{task.taskdeadline}</td>
 
@@ -169,7 +175,7 @@ class MyTimeLine extends React.Component {
                         <td key={task.id}>{task.title}</td>
                         <td key={task.id}>{task.comments}</td>
                         <td key={task.id}>{task.statusid}</td>
-
+                        <td key={task.id}>{task.statusname}</td>
                         <td key={task.id}>{task.taskassigndate}</td>
                         <td key={task.id}>{task.taskdeadline}</td>
 

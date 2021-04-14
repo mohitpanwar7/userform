@@ -310,14 +310,15 @@ def fetch_tasks_for_mytimeline():
     queryforallstatus = "select * from tasks;"
     cursor.execute(queryforallstatus)
     alltasks = cursor.fetchall()
-    colnamesfortasks = [desc[0] for desc in cursor.description]
-    print(colnamesfortasks)
+    # colnamesfortasks = [desc[0] for desc in cursor.description]
+    # print(colnamesfortasks)
 
     if alltasks != None:
 
-        query_for_yesterday_tasks_with_condtions = f"SELECT id, title,comments,statusid,assignedtoid, taskassigndate, taskdeadline from tasks where statusid in (41,50) AND assignedtoid = {id} AND taskassigndate = current_date - INTEGER '1';"
+        query_for_yesterday_tasks_with_condtions = f"SELECT tasks.id, tasks.title,tasks.comments, tasks.statusid, tasks.assignedtoid, tasks.taskassigndate, tasks.taskdeadline,status.statusname statusname from tasks inner join status on tasks.statusid = status.id AND status.id in (41,50) AND assignedtoid = {id} AND taskassigndate = current_date - INTEGER '1';"
         cursor.execute(query_for_yesterday_tasks_with_condtions)
         yesterday_tasks = cursor.fetchall()
+        colnamesfortasks = [desc[0] for desc in cursor.description]
         yesterday_tasks_list = []
         if yesterday_tasks != None:
             for task in yesterday_tasks:
@@ -326,9 +327,10 @@ def fetch_tasks_for_mytimeline():
                     columnValuetask[colnamesfortasks[taskindex]] = taskitem
                 yesterday_tasks_list.append(columnValuetask)
 
-        query_for_today_tasks = f"SELECT id, title,comments,statusid,assignedtoid, taskassigndate, taskdeadline from tasks where assignedtoid = {id} AND taskassigndate = current_date;"
+        query_for_today_tasks = f"SELECT tasks.id, tasks.title,tasks.comments, tasks.statusid, tasks.assignedtoid, tasks.taskassigndate, tasks.taskdeadline,status.statusname statusname from tasks inner join status on tasks.statusid = status.id where assignedtoid = {id} AND taskassigndate = current_date;"
         cursor.execute(query_for_today_tasks)
         today_tasks = cursor.fetchall()
+        colnamesfortasks = [desc[0] for desc in cursor.description]
         today_tasks_list = []
         if today_tasks != None:
             for task in today_tasks:
@@ -337,9 +339,10 @@ def fetch_tasks_for_mytimeline():
                     columnValuetask[colnamesfortasks[taskindex]] = taskitem
                 today_tasks_list.append(columnValuetask)
 
-        query_for_tommorrow_tasks = f"SELECT id, title,comments,statusid,assignedtoid, taskassigndate, taskdeadline from tasks where assignedtoid = {id} AND taskassigndate = current_date + INTEGER '1';"
+        query_for_tommorrow_tasks = f"SELECT tasks.id, tasks.title,tasks.comments, tasks.statusid, tasks.assignedtoid, tasks.taskassigndate, tasks.taskdeadline,status.statusname statusname from tasks inner join status on tasks.statusid = status.id where assignedtoid = {id} AND taskassigndate = current_date + INTEGER '1';"
         cursor.execute(query_for_tommorrow_tasks)
         tommorrow_tasks = cursor.fetchall()
+        colnamesfortasks = [desc[0] for desc in cursor.description]
         tommorrow_tasks_list = []
         if tommorrow_tasks != None:
             for task in tommorrow_tasks:

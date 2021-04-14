@@ -300,7 +300,7 @@ class UserTasks extends React.Component {
                     } else if (this.state.component == "mytimeline") {
                         return (
                             <div>
-                                <MyTimeLine />
+                                <MyTimeLine statuslist={this.state.allStatus}/>
                             </div>
                         )
                     } 
